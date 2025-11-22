@@ -5,7 +5,7 @@ import { useProfiles } from '../contexts/ProfileContext'
 import { useNavigate } from 'react-router-dom'
 
 
-const ProfileSelector = () => {
+const ProfileSelectorAdmin = () => {
 
     const { profiles } = useProfiles()
     const navigate = useNavigate()
@@ -48,4 +48,4 @@ const ProfileSelector = () => {
   )
 }
 
-export default ProfileSelector
+export default ProfileSelectorAdmin

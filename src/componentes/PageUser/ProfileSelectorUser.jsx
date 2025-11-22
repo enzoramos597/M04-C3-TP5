@@ -5,7 +5,7 @@ import { useProfiles } from '../contexts/ProfileContext'
 import { useNavigate } from 'react-router-dom'
 
 
-const ProfileSelector = () => {
+const ProfileSelectorUser = () => {
 
     const { profiles } = useProfiles()
     const navigate = useNavigate()
@@ -13,7 +13,7 @@ const ProfileSelector = () => {
     return (
     <>
         <div className='min h-screen flex flex-col items-center justify-center bg-black/90 text-white '>
-            <h1 className='text-4xl font-bold mb-6'>Mostrar todos los perfiles</h1>
+            <h1 className='text-4xl font-bold mb-6'>¿Quién esta viendo?</h1>
             {/* Contenedor de Cards */}
             <div className='flex flex-wrap justify-center gap-8 mx-10'>
                 {profiles.map((profile) => (
@@ -48,4 +48,4 @@ const ProfileSelector = () => {
   )
 }
 
-export default ProfileSelector
+export default ProfileSelectorUser

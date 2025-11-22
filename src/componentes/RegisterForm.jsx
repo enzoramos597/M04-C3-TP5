@@ -1,36 +1,36 @@
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { useProfiles } from "../contexts/ProfileContext";
+import { useForm } from "react-hook-form"
+import { Link, useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
+import { toast } from "react-toastify"
+import axios from "axios"
+import { useProfiles } from "../contexts/ProfileContext"
 
 const RegisterForm = () => {
-  const navigate = useNavigate();
-  const { createProfile } = useProfiles();
+  const navigate = useNavigate()
+  const { createProfile } = useProfiles()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm()
 
   // 🟢 Validar correo existente
- const checkEmailExists = async (email) => {
-  try {
-    const res = await axios.get("https://69153a6384e8bd126af9262c.mockapi.io/users");
-    const exists = res.data.some((u) => u.correo === email);
-    return exists;
-  } catch (error) {
-    console.error("Error checking email:", error);
-    return false;
+  const checkEmailExists = async (email) => {
+    try {
+      const res = await axios.get("https://69153a6384e8bd126af9262c.mockapi.io/users");
+      const exists = res.data.some((u) => u.correo === email);
+      return exists;
+    } catch (error) {
+      console.error("Error checking email:", error)
+      return false;
+    }
   }
-};
 
 
   const onSubmit = async (data) => {
     try {
-      const exists = await checkEmailExists(data.email);
+      const exists = await checkEmailExists(data.email)
 
       if (exists) {
         toast.error("Este correo ya está registrado 🛑");
@@ -70,7 +70,14 @@ const RegisterForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
-      <div className="bg-black/90 p-8 rounded-lg w-full max-w-md shadow-lg">
+      <div className="bg-black/90 p-8 rounded-lg w-full max-w-md shadow-lg relative">
+        <Link
+          to="/"
+          className="absolute top-3 right-3 text-gray-400 hover:text-red-700 text-2xl"
+          title="Cerrar"
+        >
+          &times;
+        </Link>
         <h2 className="text-3xl font-bold text-white mb-6 text-center">
           Crear Usuario
         </h2>

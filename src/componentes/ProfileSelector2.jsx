@@ -37,7 +37,7 @@ const ProfileSelector2 = () => {
       </div>
 
       <button className="mt-8 px-6 py-2 font-semibold bg-gray-800 hover:bg-gray-700 rounded-lg">
-        Administrar Perfiles
+        Agregar Perfil
       </button>
 
       <button
