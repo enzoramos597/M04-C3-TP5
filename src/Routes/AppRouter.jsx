@@ -1,14 +1,24 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Layout from '../componentes/Layout'
+import { useAuth } from '../contexts/AuthContext'
+
+import Layout from '../componentes/Layout'      // No logueado
+import Layout2 from '../componentes/Layout2'    // Logueado
+
 import Main from '../componentes/Main'
-import IniciarSesion from '../componentes/InciarSesion'
-import CreateProfile from '../componentes/CreateProfile'
+import IniciarSesion from '../componentes/IniciarSesion'
 import RegisterForm from '../componentes/RegisterForm'
+import CreateProfile from '../componentes/CreateProfile'
 import ProfileSelector2 from '../componentes/ProfileSelector2'
+
 import portada from '../assets/Inicio_portada.webp'
+import ProfileSelectorUser from '../componentes/PageUser/ProfileSelectorUser'
+import CreateProfileUser from '../componentes/PageUser/CreateProfileUser'
+import Peliculas from '../componentes/Peliculas'
 
 const AppRouter = () => {
+  const { user } = useAuth(); // ← Determinamos si está logueado
+
   return (
     <div
       className="min-h-screen text-neutral-100 bg-black/50"
@@ -21,30 +31,32 @@ const AppRouter = () => {
     >
       <Routes>
 
-        {/* Todas las páginas que usan Header + Footer */}
-        <Route path='/' element={<Layout />}>
+        {/* 👤 Si NO está logueado → usa Layout */}
+        {!user && (
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Main />} />
+            <Route path="iniciar-sesion" element={<IniciarSesion />} />
+            <Route path="registrar-usuario" element={<RegisterForm />} />
+          </Route>
+        )}
 
-          {/* Página principal */}
-          <Route index element={<Main />} />
+        {/* 🔐 Si está logueado → usa Layout2 */}
+        {user && (
+          <Route path="/" element={<Layout2 />}>
+            <Route index element={<Peliculas/>} />
+            {/* 👉 Aquí puedes agregar rutas internas del usuario logueado */}
+            <Route path='/profileselector' element={<ProfileSelectorUser />} />
+            <Route path="/createperfiluser" element={<CreateProfileUser />} />
+          </Route>
+        )}
 
-          {/* Iniciar sesión */}
-          <Route path="/iniciar-sesion" element={<IniciarSesion />} />
-
-          {/* Registrar usuario */}
-          <Route path="/registrar-usuario" element={<RegisterForm />} />
-
-           
-
-        </Route>
-
-        {/* Rutas que NO usan header/footer */}
+        {/* Rutas sin Header/Footer */}
         <Route path="/profilesuser/:id" element={<ProfileSelector2 />} />
-
         <Route path="/profiles/:id/create-profile" element={<CreateProfile />} />
 
       </Routes>
     </div>
-  )
-}
+  );
+};
 
-export default AppRouter
+export default AppRouter;

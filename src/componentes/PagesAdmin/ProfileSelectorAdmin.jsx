@@ -1,7 +1,7 @@
 
 
-import ProfileCard from './ProfileCard'
-import { useProfiles } from '../contexts/ProfileContext'
+import ProfileCard2 from '../PageUser/ProfileCardUser'
+import { useProfiles } from '../../contexts/ProfileContext'
 import { useNavigate } from 'react-router-dom'
 
 
@@ -17,7 +17,7 @@ const ProfileSelectorAdmin = () => {
             {/* Contenedor de Cards */}
             <div className='flex flex-wrap justify-center gap-8 mx-10'>
                 {profiles.map((profile) => (
-                    <ProfileCard 
+                    <ProfileCard2 
                         key={profile.id} 
                         name={profile.name} 
                         avatar={profile.avatar}
