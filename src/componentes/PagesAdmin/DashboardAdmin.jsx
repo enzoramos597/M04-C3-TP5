@@ -1,0 +1,73 @@
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import cargarpelicula from "../../assets/CargarPelicula.jpg"
+import verpeliculas from "../../assets/verpeliculas.jpg"
+import gestionusuarios from "../../assets/gestiondeusuarios.png"
+
+export default function DashboardAdmin() {
+  return (
+    <div className="min-h-screen bg-black/60 text-white p-8">
+      {/* HEADER ESTILO NETFLIX */}
+      <header className="flex justify-between items-center mb-10">
+        <h1 className="text-4xl font-bold tracking-wide text-red-600">PELIFLIX ADMIN</h1>
+        <nav className="flex gap-6 text-lg">
+          {/*<Link className="hover:text-red-500 transition" to="/admin/peliculas">Películas</Link>
+          <Link className="hover:text-red-500 transition" to="/admin/usuarios">Usuarios</Link>
+          <Link className="hover:text-red-500 transition" to="/">Salir</Link>*/}
+        </nav>
+      </header>
+
+      {/* GRID PRINCIPAL */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+
+        {/* CARD 1 */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900"
+        >
+          <Link to="/uploadmovie" className="w-full h-full block">
+            <img
+              src={cargarpelicula}
+              className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+              <p className="text-2xl font-bold">Cargar Película</p>
+            </div>
+          </Link>
+        </motion.div>
+
+        {/* CARD 2 */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900"
+        >
+          <Link to="/peliculas" className="w-full h-full block">
+            <img
+              src={verpeliculas}
+              className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+              <p className="text-2xl font-bold">Ver Películas</p>
+            </div>
+          </Link>
+        </motion.div>
+
+        {/* CARD 3 */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900"
+        >
+          <Link to="/gestion-usuarios" className="w-full h-full block">
+            <img
+              src={gestionusuarios}
+              className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+              <p className="text-2xl font-bold">Gestión de Usuarios</p>
+            </div>
+          </Link>
+        </motion.div>
+      </div>
+    </div>
+  );
+}

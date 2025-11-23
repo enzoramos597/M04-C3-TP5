@@ -1,0 +1,178 @@
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { API_PELICULAS } from "../../services/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const ListaPelicula = () => {
+  const [peliculas, setPeliculas] = useState([]);
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.type === "Administrador";
+
+  const moviesPerPage = 12;
+
+  // 🔒 Control para evitar múltiples toasts
+  const toastShownRef = useRef(false);
+
+  useEffect(() => {
+    const fetchPeliculas = async () => {
+      const res = await axios.get(`${API_PELICULAS}`);
+      const activas = res.data.filter(
+        (p) => p.estado?.toLowerCase() === "activo"
+      );
+      setPeliculas(activas);
+    };
+    fetchPeliculas();
+  }, []);
+
+  // 🔍 FILTRO BUSCADOR
+  const filteredMovies = peliculas.filter((peli) => {
+    const texto = search.toLowerCase();
+    return (
+      peli.original_title?.toLowerCase().includes(texto) ||
+      peli.Actores?.join(" ").toLowerCase().includes(texto) ||
+      peli.genero?.join(" ").toLowerCase().includes(texto) ||
+      peli.Director?.join(" ").toLowerCase().includes(texto)
+    );
+  });
+
+  // ⚠ Toast seguro (solo 1 vez por búsqueda sin resultados)
+  useEffect(() => {
+    if (search.trim() !== "" && filteredMovies.length === 0) {
+      if (!toastShownRef.current) {
+        toast.error("❌ No se encontró la película que estabas buscando.", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+        toastShownRef.current = true; // Evita toasts repetidos
+      }
+    } else {
+      toastShownRef.current = false; // Reset si vuelven resultados o se borra el texto
+    }
+  }, [search, filteredMovies.length]);
+
+  // 🔢 PAGINACIÓN
+  const totalPages =
+    filteredMovies.length === 0
+      ? 1
+      : Math.ceil(filteredMovies.length / moviesPerPage);
+
+  const startIndex = (page - 1) * moviesPerPage;
+  const currentMovies = filteredMovies.slice(
+    startIndex,
+    startIndex + moviesPerPage
+  );
+
+  const noResults = filteredMovies.length === 0;
+
+  return (
+    <div className="min-h-screen bg-black/60 backdrop-blur-sm p-6">
+
+      <ToastContainer />
+
+      <h2 className="text-3xl font-bold mb-4 text-white text-center drop-shadow-lg">
+        ¿Qué Películas te gustaría ver?
+      </h2>
+
+      {/* 🔍 BUSCADOR */}
+      <div className="max-w-xl mx-auto mb-6">
+        <input
+          type="text"
+          placeholder="Buscar películas por título, actores, género, director..."
+          value={search}
+          onChange={(e) => {
+            setPage(1);
+            setSearch(e.target.value);
+          }}
+          className="w-full p-3 rounded-lg bg-neutral-900 text-white border border-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+        />
+      </div>
+
+      {/* GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {currentMovies.map((peli) => {
+          const year = peli.anio || "-";
+
+          return (
+            <div
+              key={peli.id}
+              className="relative rounded-lg cursor-pointer hover:scale-105 transition shadow-xl"
+            >
+              <div
+                onClick={() => navigate(`/peliculas/${peli.id}`)}
+                className="relative group overflow-hidden rounded-lg"
+              >
+                <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
+                  {year}
+                </span>
+
+                <img
+                  src={peli.poster}
+                  alt={peli.original_title}
+                  className="w-64 h-64 object-contain rounded-lg"
+                />
+
+                <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition flex flex-col justify-center items-center p-3">
+                  <h3 className="text-lg font-bold text-white text-center drop-shadow-lg">
+                    {peli.original_title}
+                  </h3>
+                  <p className="text-sm mt-1 text-gray-300">
+                    Director: {peli.Director?.join(", ") || "Sin información"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-2 px-1 text-center">
+                <h3 className="text-white font-semibold truncate">
+                  {peli.original_title}
+                </h3>
+                <p className="text-gray-400 text-sm truncate">
+                  {peli.genero?.join(", ") || "Sin género"}
+                </p>
+              </div>
+
+              {isAdmin && (
+                <button
+                  onClick={() => navigate(`/updatemovie/${peli.id}`)}
+                  className="absolute top-2 right-2 bg-blue-600 text-white px-2 py-1 rounded text-xs shadow-lg hover:bg-blue-500 transition"
+                >
+                  Editar
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* PAGINACIÓN */}
+      <div className="flex justify-center gap-4 mt-6 text-white">
+        <button
+          disabled={page === 1 || noResults}
+          onClick={() => setPage(page - 1)}
+          className="px-4 py-2 bg-red-600 rounded disabled:bg-gray-600"
+        >
+          ◀ Anterior
+        </button>
+
+        <span>Página {page} de {totalPages}</span>
+
+        <button
+          disabled={page === totalPages || noResults}
+          onClick={() => setPage(page + 1)}
+          className="px-4 py-2 bg-red-600 rounded disabled:bg-gray-600"
+        >
+          Siguiente ▶
+        </button>
+      </div>
+
+    </div>
+  );
+};
+
+export default ListaPelicula;

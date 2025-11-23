@@ -54,7 +54,22 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
-  };
+  }
+
+  const updateUserFavoritos = async (favoritos) => {
+  if (!user) return
+
+  try {
+    const updated = { ...user, favoritos }
+
+    await axios.put(`${API}/${user.id}`, updated)
+
+    setUser(updated);
+    localStorage.setItem("user", JSON.stringify(updated));
+  } catch (error) {
+    console.error("Error actualizando favoritos:", error);
+  }
+};
 
   return (
     <AuthContext.Provider 
@@ -63,7 +78,8 @@ export const AuthProvider = ({ children }) => {
         login, 
         logout, 
         loading,
-        refreshUser   // ⬅️ agregado al contexto
+        refreshUser,
+        updateUserFavoritos   // ⬅️ agregado al contexto
       }}
     >
       {children}

@@ -1,9 +1,9 @@
-import React, { use, useState } from 'react';
-import logo from '../../assets/Logo_2.png';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import logo from '../../assets/Logo_2.png'
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
-const Header2 = ({ setIsModalOpen }) => {
+const Header2 = ({ onOpenFavoritos }) => {
   const { user, logout } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
@@ -17,10 +17,29 @@ const Header2 = ({ setIsModalOpen }) => {
   ];
 
   const handleLinkClick = (linkName, event) => {
-    event.preventDefault()
-    if (linkName === "Mi Lista") {
-      setIsModalOpen(true);
+    event.preventDefault();
+
+    if (linkName === "Inicio") {
+      navigate("/");
       setIsOpen(false);
+      return;
+    }
+
+    if (linkName === "Catálogo") {
+      navigate("/");
+      setIsOpen(false);
+      return;
+    }
+
+    if (linkName === "Mi Lista") {
+      // Aquí llamamos la función pasada por props
+      if (typeof onOpenFavoritos === "function") {
+        onOpenFavoritos();
+      } else {
+        console.warn("onOpenFavoritos no es una función. Verifica que Layout2 pase la prop correctamente.");
+      }
+      setIsOpen(false);
+      return;
     }
   };
 
@@ -30,13 +49,10 @@ const Header2 = ({ setIsModalOpen }) => {
 
         {/* LOGO */}
         <div 
-        onClick={() => navigate('/')}
-        className="flex items-center gap-2">
-          <img 
-            src={logo} 
-            alt="LogoPeliFlix" 
-            className="w-[120px] p-0.5"
-          />                  
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 cursor-pointer"
+        >
+          <img src={logo} alt="LogoPeliFlix" className="w-[120px] p-0.5"/>
         </div>
 
         {/* NAVBAR CENTRADO */}
@@ -46,8 +62,8 @@ const Header2 = ({ setIsModalOpen }) => {
               <li key={link.id}>
                 <a
                   href={link.href}
-                  onClick={(e) => handleLinkClick(link.name, e)}
                   className="flex items-center gap-2 text-white hover:text-red-400 transition font-semibold cursor-pointer"
+                  onClick={(e) => handleLinkClick(link.name, e)}
                 >
                   <i className={link.icon}></i>
                   {link.name}
@@ -59,12 +75,7 @@ const Header2 = ({ setIsModalOpen }) => {
 
         {/* NOMBRE + LOGOUT */}
         <div className="hidden md:flex items-center gap-4">
-
-          {user && (
-            <span className="text-white font-semibold">
-              Hola, {user.name}
-            </span>
-          )}
+          {user && <span className="text-white font-semibold">Hola, {user.name}</span>}
 
           {user && (
             <button
@@ -111,21 +122,6 @@ const Header2 = ({ setIsModalOpen }) => {
             </li>
           ))}
         </ul>
-
-        {/* NOMBRE + LOGOUT MOBILE */}
-        {user && (
-          <div className="flex flex-col items-center py-3 border-t border-red-400">
-            <span className="text-white font-semibold mb-2">
-              {user.name}
-            </span>
-            <button
-              onClick={logout}
-              className="px-4 py-2 bg-red-700 hover:bg-red-300 text-white rounded font-bold"
-            >
-              Cerrar Sesión
-            </button>
-          </div>
-        )}
       </div>
     </nav>
   );

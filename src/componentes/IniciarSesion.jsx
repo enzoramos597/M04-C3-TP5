@@ -64,6 +64,25 @@ const IniciarSesion = () => {
           >
             Iniciar sesión
           </button>
+          <div className="flex justify-between items-center mt-4 text-sm text-gray-400">
+          <label className="flex items-center gap-2">
+            <input type="checkbox" className="accent-red-600" />
+            Recordarme
+          </label>
+          <Link to="#" className="hover:underline text-gray-300">
+            ¿Olvidaste la contraseña?
+          </Link>
+        </div>
+
+        <p className="text-gray-400 mt-6 text-sm">
+          ¿Primera vez en PeliFlix?
+          <Link
+            to="/registrar-usuario"
+            className="text-white font-semibold hover:underline ml-1"
+          >
+            Suscríbete ya.
+          </Link>
+        </p>
         </form>
       </div>
     </div>

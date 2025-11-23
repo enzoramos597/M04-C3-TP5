@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
-
 import tendencia1 from '../assets/Merlina.jpg';
 import tendencia2 from '../assets/Happy.jpg';
 import tendencia3 from '../assets/Naruto.jpg';
@@ -9,15 +8,16 @@ import tendencia4 from '../assets/Enelbarro.jpg';
 import tendencia5 from '../assets/Otra_vida.webp';
 import Slider from "react-slick";
 import LogoAnimado from "./LogoAnimado";
+import { useNavigate } from "react-router-dom";
 
 // Flecha siguiente
 const NextArrow = ({ onClick, disabled }) => (
   <div 
-    className={`absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white 
+    className={`absolute -right-5 top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white 
       ${disabled ? "opacity-40 pointer-events-none" : ""}`}
     onClick={disabled ? undefined : onClick}
   >
-    <span className="text-2xl sm:text-3xl absolute right-2  font-bold bg-black/40 rounded-full px-2 py-1 hover:bg-red-600 transition">
+    <span className="text-2xl sm:text-3xl absolute right-2  font-bold bg-black/0 rounded-full px-2 py-1 hover:bg-red-600 transition">
       ❯
     </span>
   </div>
@@ -26,11 +26,11 @@ const NextArrow = ({ onClick, disabled }) => (
 // Flecha anterior
 const PrevArrow = ({ onClick, disabled }) => (
   <div 
-    className={`absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white 
+    className={`absolute -left-5 top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white 
       ${disabled ? "opacity-40 pointer-events-none" : ""}`}
     onClick={disabled ? undefined : onClick}
   >
-    <span className="text-2xl sm:text-3xl  absolute left-2 font-bold bg-black/40 rounded-full px-2 py-1 hover:bg-red-600 transition">
+    <span className="text-2xl sm:text-3xl  absolute left-2 font-bold bg-black/90 rounded-full px-2 py-1 hover:bg-red-600 transition">
       ❮
     </span>
   </div>
@@ -47,6 +47,7 @@ const trendData = [
 const Main = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slidesToShowDefault = 3;
+  const navigate = useNavigate()
 
   const sliderSettings = {
     dots: true,
@@ -83,7 +84,7 @@ const Main = () => {
   const isNextDisabled = currentSlide >= totalSlides - slidesToShow;
 
   return (
-    <div className="pt-10">
+    <div className="pt-10 ">
       {/* Logo animado con motion */}
       <LogoAnimado />
        {/* Fin Logo animado con motion */}
@@ -108,7 +109,9 @@ const Main = () => {
           >
             {trendData.map(trend => (
               <div key={trend.id} className="px-2">
-                <div className="relative rounded-md overflow-hidden h-[300px] sm:h-[350px] w-full max-w-[350px] mx-auto transition-transform hover:scale-105 border border-red-600 shadow-lg shadow-neutral-950">
+                <div 
+                onClick={()=>navigate('/iniciar-sesion')}
+                className="relative rounded-md overflow-hidden h-[300px] sm:h-[350px] w-full max-w-[350px] mx-auto transition-transform hover:scale-105 border border-red-600 shadow-lg shadow-neutral-950">
                   <img 
                     src={trend.src} 
                     alt={trend.alt} 
