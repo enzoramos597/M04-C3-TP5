@@ -1,60 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../contexts/AuthContext";
 import { toast } from "react-toastify";
-import { API_USERS, API_PELICULAS } from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
+import { API_PELICULAS } from "../../services/api";
 
 const MovieDetail = () => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
-  const { user, refreshUser } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  // 1) Cargar película al montar
+  const { user, updateUserFavoritos } = useAuth();
+
+  // 1) Cargar película
   useEffect(() => {
-    let mounted = true;
     const loadMovie = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `${API_PELICULAS}/${id}`
-        );
-        if (!mounted) return;
+        const res = await axios.get(`${API_PELICULAS}/${id}`);
         setMovie(res.data);
       } catch (err) {
-        console.error("Error al cargar película:", err);
+        console.error(err);
         toast.error("Error cargando la película");
       } finally {
-        if (mounted) setLoading(false);
+        setLoading(false);
       }
     };
+
     loadMovie();
-    return () => {
-      mounted = false;
-    };
   }, [id]);
 
-  if (loading) return <p className="text-white p-10">Cargando...</p>;
-  if (!movie) return <p className="text-white p-10">No se encontró la película.</p>;
+  // 2) useMemo: siempre se ejecuta (porque los hooks NO pueden ir dentro de if o antes de returns)
+  const estaEnFavoritos = useMemo(() => {
+    if (!user || !Array.isArray(user.favoritos) || !movie) return false;
+    return user.favoritos.some(f => String(f.id) === String(movie.id));
+  }, [user, movie]);
 
-  // 2) Estado derivado: si está en favoritos (NO usar setState dentro de effect)
-  const estaEnFavoritos =
-    Array.isArray(user?.favoritos) &&
-    user.favoritos.some((f) => String(f.id) === String(movie.id));
-
-  // 3) Agregar a favoritos
+  // 3) Funciones de agregar / eliminar
   const agregarFavorito = async () => {
-    if (!user) {
-      toast.error("Debes iniciar sesión para agregar favoritos");
-      return;
-    }
+    if (!user) return toast.error("Debes iniciar sesión")
 
     try {
-      const favoritosActuales = Array.isArray(user.favoritos) ? user.favoritos : [];
+      const lista = Array.isArray(user.favoritos) ? user.favoritos : []
 
-      // prevenir duplicados por si acaso
-      if (favoritosActuales.some((f) => String(f.id) === String(movie.id))) {
+      if (lista.some(f => String(f.id) === String(movie.id))) {
         toast.info("Ya está en favoritos");
         return;
       }
@@ -65,52 +54,31 @@ const MovieDetail = () => {
         poster: movie.poster,
       };
 
-      const actualizados = [...favoritosActuales, nuevoFav];
-
-      await axios.put(
-        `${API_USERS}/${user.id}`,
-        {
-          ...user,
-          favoritos: actualizados,
-        }
-      );
-
-      await refreshUser(user.id); // sincroniza el contexto
+      await updateUserFavoritos([...lista, nuevoFav]);
       toast.success("Película agregada a favoritos ❤️");
-    } catch (error) {
-      console.error("Error al agregar favorito:", error);
-      toast.error("Error al agregar a favoritos");
+    } catch {
+      toast.error("Error al agregar favorito");
     }
   };
 
-  // 4) Eliminar de favoritos
   const eliminarFavorito = async () => {
-    if (!user) {
-      toast.error("Debes iniciar sesión");
-      return;
-    }
+    if (!user) return toast.error("Debes iniciar sesión");
 
     try {
-      const favoritosActuales = Array.isArray(user.favoritos) ? user.favoritos : [];
-      const nuevos = favoritosActuales.filter((f) => String(f.id) !== String(movie.id));
-
-      await axios.put(
-        `${API_USERS}/${user.id}`,
-        {
-          ...user,
-          favoritos: nuevos,
-        }
-      );
-
-      await refreshUser(user.id);
+      const nuevos = user.favoritos.filter(f => String(f.id) !== String(movie.id));
+      console.log("cuando doy click que hace?")
       toast.info("Película eliminada de favoritos ❌");
-    } catch (error) {
-      console.error("Error al eliminar favorito:", error);
-      toast.error("Error al eliminar de favoritos");
+      await updateUserFavoritos(nuevos);
+      
+    } catch {
+      toast.error("Error al eliminar favorito");
     }
   };
 
-  // helper: convertir links youtube a embed
+  // 4) returns (estos sí pueden ir al final sin romper hooks)
+  if (loading) return <p className="text-white p-10">Cargando...</p>;
+  if (!movie) return <p className="text-white p-10">No se encontró la película.</p>;
+
   const toEmbedUrl = (url) => {
     if (!url) return "";
     if (url.includes("embed")) return url;
@@ -127,65 +95,54 @@ const MovieDetail = () => {
       ></div>
 
       <div className="relative z-10 max-w-6xl mx-auto p-6">
-        <div className="flex flex-col md:flex-row gap-8 bg-neutral-900/90 p-6 rounded-2xl border border-neutral-700 shadow-xl">
-          <div className="md:w-1/3 w-full flex justify-center">
+        <div className="flex flex-col md:flex-row gap-8 bg-neutral-900/90 p-6 rounded-2xl">
+
+          <div className="md:w-1/3 flex justify-center">
             <img
               src={movie.poster}
               alt={movie.original_title}
-              className="w-full object-contain rounded-xl shadow-lg"
+              className="w-full rounded-xl shadow-lg"
             />
           </div>
 
           <div className="md:w-2/3 flex flex-col gap-5">
             <h1 className="text-5xl font-bold">{movie.original_title}</h1>
-
             <p className="text-gray-300 text-lg">{movie.detalle}</p>
 
-            <p>
-              <span className="font-bold text-gray-400">Género:</span>{" "}
-              {movie.genero?.join(", ")}
-            </p>
-
-            <p>
-              <span className="font-bold text-gray-400">Director:</span>{" "}
-              {movie.Director?.join(", ")}
-            </p>
-
-            <p>
-              <span className="font-bold text-gray-400">Actores:</span>{" "}
-              {movie.actores?.join(", ")}
-            </p>
+            <p><span className="text-gray-400">Género:</span> {movie.genero?.join(", ")}</p>
+            <p><span className="text-gray-400">Director:</span> {movie.Director?.join(", ")}</p>
+            <p><span className="text-gray-400">Actores:</span> {movie.actores?.join(", ")}</p>
 
             <div className="flex justify-center mt-2">
               {estaEnFavoritos ? (
                 <button
                   onClick={eliminarFavorito}
-                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md font-semibold text-sm flex items-center gap-2"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md"
                 >
-                  <i className="bi bi-trash"></i> Quitar de Favoritos
+                  <span className="text-xl">🗑️</span>
+                  <span>Quitar de Favoritos</span>
                 </button>
+
               ) : (
                 <button
                   onClick={agregarFavorito}
-                  className="px-4 py-2 bg-red-700 hover:bg-red-800 rounded-md font-semibold text-sm flex items-center gap-2"
+                  className="flex items-center gap-2 px-4 py-2 bg-red-700 hover:bg-red-800 rounded-md"
                 >
-                  <i className="bi bi-heart-fill"></i> Agregar a Favoritos
+                  <span className="text-xl">❤️</span>
+                  <span>Agregar a Favoritos</span>
                 </button>
               )}
             </div>
           </div>
         </div>
 
-        <div className="mt-10 bg-neutral-900/90 p-6 rounded-2xl border border-neutral-700">
-          <h2 className="text-xl font-semibold mb-4 text-gray-300">
-            Ver trailer de <span className="text-white">{movie.original_title}</span>
-          </h2>
-
-          <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-neutral-700">
+        {/* TRAILER */}
+        <div className="mt-10 bg-neutral-900/90 p-6 rounded-2xl">
+          <h2 className="text-xl mb-4">Ver trailer</h2>
+          <div className="relative w-full aspect-video rounded-xl overflow-hidden">
             <iframe
               src={toEmbedUrl(movie.link)}
               className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
           </div>

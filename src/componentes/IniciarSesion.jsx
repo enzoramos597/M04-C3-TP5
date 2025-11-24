@@ -13,7 +13,7 @@ const IniciarSesion = () => {
     const user = await login(data.email, data.password);
 
     if (!user) {
-      toast.error("Credenciales incorrectas ❌");
+      toast.error("Usuario o contraseña incorrectas ❌");
       return;
     }
 

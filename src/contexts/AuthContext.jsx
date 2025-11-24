@@ -1,17 +1,18 @@
 import { createContext, useContext, useState } from "react";
 import axios from "axios";
+import { API_USERS } from "../services/api"
 
-const AuthContext = createContext();
+const AuthContext = createContext()
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)
 
-const API = "https://69153a6384e8bd126af9262c.mockapi.io/users";
+//const API = "https://69153a6384e8bd126af9262c.mockapi.io/users";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : null;
-  });
+    const saved = localStorage.getItem("user")
+    return saved ? JSON.parse(saved) : null
+  })
 
   const [loading, setLoading] = useState(false);
 
@@ -19,34 +20,34 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      const res = await axios.get(API);
+      const res = await axios.get(API_USERS)
       const foundUser = res.data.find(
         (u) => u.correo === email && u.contrasenia === password
-      );
+      )
 
-      if (!foundUser) return null;
+      if (!foundUser) return null
 
       setUser(foundUser);
-      localStorage.setItem("user", JSON.stringify(foundUser));
+      localStorage.setItem("user", JSON.stringify(foundUser))
 
       return foundUser;
     } catch (error) {
-      console.error("Error en login:", error);
+      console.error("Error en login:", error)
       return null;
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
   // 🔁 🔥 REFRESH USER (después de crear perfil o editar datos)
   const refreshUser = async (id) => {
     try {
-      const { data } = await axios.get(`${API}/${id}`);
+      const { data } = await axios.get(`${API_USERS}/${id}`);
       setUser(data);
       localStorage.setItem("user", JSON.stringify(data)); // ⬅️ actualizar localStorage
       return data;
     } catch (error) {
-      console.error("Error en refreshUser:", error);
+      console.error("Error en refreshUser:", error)
     }
   };
 
@@ -62,15 +63,15 @@ export const AuthProvider = ({ children }) => {
   try {
     const updated = { ...user, favoritos }
 
-    await axios.put(`${API}/${user.id}`, updated)
+    await axios.put(`${API_USERS}/${user.id}`, updated)
 
-    setUser(updated);
-    localStorage.setItem("user", JSON.stringify(updated));
+    setUser(updated)
+    localStorage.setItem("user", JSON.stringify(updated))
   } catch (error) {
-    console.error("Error actualizando favoritos:", error);
+    console.error("Error actualizando favoritos:", error)
   }
 };
-
+const [activeProfile, setActiveProfile] = useState(null);
   return (
     <AuthContext.Provider 
       value={{ 
@@ -79,7 +80,9 @@ export const AuthProvider = ({ children }) => {
         logout, 
         loading,
         refreshUser,
-        updateUserFavoritos   // ⬅️ agregado al contexto
+        updateUserFavoritos,   // ⬅️ agregado al contexto
+        activeProfile,
+        setActiveProfile
       }}
     >
       {children}

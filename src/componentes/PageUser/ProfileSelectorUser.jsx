@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const ProfileSelectorUser = () => {
 
-    const { user, refreshUser } = useAuth();
+    const { user, refreshUser, setActiveProfile} = useAuth();
     const navigate = useNavigate();
 
     // Actualizar usuario al entrar
@@ -29,9 +29,8 @@ const ProfileSelectorUser = () => {
     };
 
     return (
-        <div className='min h-screen flex flex-col items-center justify-center bg-black/90 text-white'>
+        <div className='min-h-screen flex flex-col items-center justify-center bg-black/80 text-white'>
             <h1 className='text-4xl font-bold mb-6'>¿Quién está viendo?</h1>
-
             <div className='flex flex-wrap justify-center gap-8 mx-10'>
                 
                 {perfilesUsuario.map((profile) => (
@@ -39,7 +38,11 @@ const ProfileSelectorUser = () => {
                         key={profile.id}
                         name={profile.name}
                         avatar={profile.avatar}
-                        onClick={() => navigate(`/profileselector/profiles/${profile.id}`)}
+                        onClick={() => {
+                        setActiveProfile(profile); // guardar perfil
+                        navigate('/peliculas');    // ir a películas
+}}
+
                     />
                 ))}
 
@@ -59,12 +62,12 @@ const ProfileSelectorUser = () => {
                 Administrar Perfiles
             </button>
 
-            <button
-                onClick={() => navigate(`/`)}
+            {/*<button
+                onClick={() => navigate("/")}
                 className='mt-8 px-6 py-2 font-semibold bg-gray-800 text-white hover:bg-gray-700 rounded-lg'
             >
                 Home
-            </button>
+            </button>*/}
         </div>
     );
 };

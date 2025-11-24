@@ -1,58 +1,83 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import logo from '../../assets/Logo_2.png'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify"
 
 const Header2 = ({ onOpenFavoritos }) => {
-  const { user, logout } = useAuth()
+  const { user, logout, activeProfile } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate()
+
+  // Evita toasts duplicados
+  const toastRef = useRef(false);
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
   const navbarLinks = [
     { id: 1, name: "Inicio", href: "/", icon: "bi bi-house-fill" },
-    { id: 2, name: "Catálogo", href: "/", icon: "bi bi-film" },
+    { id: 2, name: "Perfiles", href: "/ProfileSelectorUser", icon: "bi bi-gear-fill" },
     { id: 3, name: "Mi Lista", href: "#", icon: "bi bi-bookmark-heart-fill" },
   ];
 
-  const handleLinkClick = (linkName, event) => {
-    event.preventDefault();
-
-    if (linkName === "Inicio") {
-      navigate("/");
-      setIsOpen(false);
-      return;
-    }
-
-    if (linkName === "Catálogo") {
-      navigate("/");
-      setIsOpen(false);
-      return;
-    }
-
-    if (linkName === "Mi Lista") {
-      // Aquí llamamos la función pasada por props
-      if (typeof onOpenFavoritos === "function") {
-        onOpenFavoritos();
-      } else {
-        console.warn("onOpenFavoritos no es una función. Verifica que Layout2 pase la prop correctamente.");
+  const redirectToPeliculas = () => {
+    if (!activeProfile) {
+      if (!toastRef.current) {
+        toast.error("Selecciona un perfil para ver las películas.");
+        toastRef.current = true;
+        setTimeout(() => (toastRef.current = false), 2000);
       }
-      setIsOpen(false);
+      navigate("/");
       return;
     }
+    navigate("/peliculas");
   };
+
+  const handleLinkClick = (linkName, event, href) => {
+  event.preventDefault();
+
+  if (linkName === "Inicio") {
+    redirectToPeliculas();
+    setIsOpen(false);
+    return;
+  }
+
+  // 🔧 CORREGIDO: Antes decía "Conf. Perfiles"
+  if (linkName === "Perfiles") {
+    navigate("/");   // 👉 Va a la selección de perfiles
+    setIsOpen(false);
+    return;
+  }
+
+  if (linkName === "Mi Lista") {
+    if (!activeProfile) {
+      if (!toastRef.current) {
+        toast.error("Selecciona un perfil para ver tu lista.");
+        toastRef.current = true;
+      }
+      navigate("/");
+      return;
+    }
+
+    if (typeof onOpenFavoritos === "function") {
+      onOpenFavoritos();
+    }
+    setIsOpen(false)
+    return
+  }
+}
+
 
   return (
     <nav className="w-full bg-black/90 text-white relative z-50">
       <div className="flex justify-between items-center sm:px-12 sm:py-3 px-4 py-2">
 
         {/* LOGO */}
-        <div 
-          onClick={() => navigate('/')}
+        <div
+          onClick={redirectToPeliculas}
           className="flex items-center gap-2 cursor-pointer"
         >
-          <img src={logo} alt="LogoPeliFlix" className="w-[120px] p-0.5"/>
+          <img src={logo} alt="LogoPeliFlix" className="w-[120px] p-0.5" />
         </div>
 
         {/* NAVBAR CENTRADO */}
@@ -63,7 +88,7 @@ const Header2 = ({ onOpenFavoritos }) => {
                 <a
                   href={link.href}
                   className="flex items-center gap-2 text-white hover:text-red-400 transition font-semibold cursor-pointer"
-                  onClick={(e) => handleLinkClick(link.name, e)}
+                  onClick={(e) => handleLinkClick(link.name, e, link.href)}
                 >
                   <i className={link.icon}></i>
                   {link.name}
@@ -113,7 +138,7 @@ const Header2 = ({ onOpenFavoritos }) => {
             <li key={link.id} className="py-3 border-b border-gray-700 w-full text-center">
               <a
                 href={link.href}
-                onClick={(e) => handleLinkClick(link.name, e)}
+                onClick={(e) => handleLinkClick(link.name, e, link.href)}
                 className="flex items-center justify-center gap-2 text-white font-semibold hover:text-red-400 transition cursor-pointer"
               >
                 <i className={link.icon}></i>

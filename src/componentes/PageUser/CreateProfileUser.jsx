@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "../../contexts/AuthContext";
 
 // Avatares
-import doug from "../../assets/avatars/doug.jpg";
+import doug from "../../assets/avatars/Doug.jpg";
 import starwars from "../../assets/avatars/starwars.jpeg";
 import starwars2 from "../../assets/avatars/starwars2.webp";
 import starwars3 from "../../assets/avatars/starwars3.webp";

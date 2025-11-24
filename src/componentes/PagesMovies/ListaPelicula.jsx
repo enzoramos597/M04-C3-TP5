@@ -12,20 +12,28 @@ const ListaPelicula = () => {
   const [page, setPage] = useState(1);
 
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, activeProfile } = useAuth();
   const isAdmin = user?.type === "Administrador";
 
   const moviesPerPage = 12;
-
-  // 🔒 Control para evitar múltiples toasts
   const toastShownRef = useRef(false);
 
+  // 🛑 Si NO hay perfil activo → redirigir al selector
+  useEffect(() => {
+    if (!activeProfile) {
+      if (!toastShownRef.current) {
+        toast.error("Selecciona un perfil para ver las películas.");
+        toastShownRef.current = true;
+      }
+      navigate("/");
+    }
+  }, [activeProfile, navigate]);
+
+  // 🟢 Cargar películas
   useEffect(() => {
     const fetchPeliculas = async () => {
       const res = await axios.get(`${API_PELICULAS}`);
-      const activas = res.data.filter(
-        (p) => p.estado?.toLowerCase() === "activo"
-      );
+      const activas = res.data.filter((p) => p.estado?.toLowerCase() === "activo");
       setPeliculas(activas);
     };
     fetchPeliculas();
@@ -42,7 +50,7 @@ const ListaPelicula = () => {
     );
   });
 
-  // ⚠ Toast seguro (solo 1 vez por búsqueda sin resultados)
+  // ⚠ Toast solo 1 vez si no hay resultados
   useEffect(() => {
     if (search.trim() !== "" && filteredMovies.length === 0) {
       if (!toastShownRef.current) {
@@ -50,25 +58,18 @@ const ListaPelicula = () => {
           position: "top-right",
           autoClose: 2000,
         });
-        toastShownRef.current = true; // Evita toasts repetidos
+        toastShownRef.current = true;
       }
     } else {
-      toastShownRef.current = false; // Reset si vuelven resultados o se borra el texto
+      toastShownRef.current = false;
     }
   }, [search, filteredMovies.length]);
 
-  // 🔢 PAGINACIÓN
   const totalPages =
-    filteredMovies.length === 0
-      ? 1
-      : Math.ceil(filteredMovies.length / moviesPerPage);
+    filteredMovies.length === 0 ? 1 : Math.ceil(filteredMovies.length / moviesPerPage);
 
   const startIndex = (page - 1) * moviesPerPage;
-  const currentMovies = filteredMovies.slice(
-    startIndex,
-    startIndex + moviesPerPage
-  );
-
+  const currentMovies = filteredMovies.slice(startIndex, startIndex + moviesPerPage);
   const noResults = filteredMovies.length === 0;
 
   return (
@@ -129,9 +130,7 @@ const ListaPelicula = () => {
               </div>
 
               <div className="mt-2 px-1 text-center">
-                <h3 className="text-white font-semibold truncate">
-                  {peli.original_title}
-                </h3>
+                <h3 className="text-white font-semibold truncate">{peli.original_title}</h3>
                 <p className="text-gray-400 text-sm truncate">
                   {peli.genero?.join(", ") || "Sin género"}
                 </p>
