@@ -8,6 +8,7 @@ const Header = () => {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+        
     };
 
     return (
@@ -91,7 +92,9 @@ const Header = () => {
 
                 {/* VISTA MOBILE SOCIAL */}
                 <ul className="flex space-x-4 px-4 py-2 border-t border-red-400 justify-center">
-                   <button className="px-4 py-2 bg-red-700 hover:bg-red-300 text-white rounded text-center font-bold">
+                   <button 
+                   onClick={()=>navigate(`/iniciar-sesion`)}
+                   className="px-4 py-2 bg-red-700 hover:bg-red-300 text-white rounded text-center font-bold">
                         Iniciar Sesión
                    </button>
                    

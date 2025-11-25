@@ -1,72 +1,44 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import logo from '../../assets/Logo_2.png'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { toast } from "react-toastify"
 
-const Header2 = ({ onOpenFavoritos }) => {
-  const { user, logout, activeProfile } = useAuth()
-  const [isOpen, setIsOpen] = useState(false)
-  const navigate = useNavigate()
+const HeaderUser = ({ onOpenFavoritos }) => {
+  const { user, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // Evita toasts duplicados
-  const toastRef = useRef(false);
-
-  const toggleMenu = () => setIsOpen(!isOpen)
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   const navbarLinks = [
     { id: 1, name: "Inicio", href: "/", icon: "bi bi-house-fill" },
-    { id: 2, name: "Perfiles", href: "/ProfileSelectorUser", icon: "bi bi-gear-fill" },
+    { id: 2, name: "Perfiles", href: "/", icon: "bi bi-gear-fill" }, // rueda dentada
     { id: 3, name: "Mi Lista", href: "#", icon: "bi bi-bookmark-heart-fill" },
   ];
 
-  const redirectToPeliculas = () => {
-    if (!activeProfile) {
-      if (!toastRef.current) {
-        toast.error("Selecciona un perfil para ver las películas.");
-        toastRef.current = true;
-        setTimeout(() => (toastRef.current = false), 2000);
-      }
-      navigate("/");
+  const handleLinkClick = (linkName, event) => {
+    event.preventDefault();
+
+    if (linkName === "Inicio") {
+      navigate('/peliculas');
+      setIsOpen(false);
       return;
     }
-    navigate("/peliculas");
+
+    if (linkName === "Perfiles") {
+      navigate('/');
+      setIsOpen(false);
+      return;
+    }
+
+    if (linkName === "Mi Lista") {
+      if (typeof onOpenFavoritos === "function") {
+        onOpenFavoritos();
+      }
+      setIsOpen(false);
+      return;
+    }
   };
-
-  const handleLinkClick = (linkName, event, href) => {
-  event.preventDefault();
-
-  if (linkName === "Inicio") {
-    redirectToPeliculas();
-    setIsOpen(false);
-    return;
-  }
-
-  // 🔧 CORREGIDO: Antes decía "Conf. Perfiles"
-  if (linkName === "Perfiles") {
-    navigate("/");   // 👉 Va a la selección de perfiles
-    setIsOpen(false);
-    return;
-  }
-
-  if (linkName === "Mi Lista") {
-    if (!activeProfile) {
-      if (!toastRef.current) {
-        toast.error("Selecciona un perfil para ver tu lista.");
-        toastRef.current = true;
-      }
-      navigate("/");
-      return;
-    }
-
-    if (typeof onOpenFavoritos === "function") {
-      onOpenFavoritos();
-    }
-    setIsOpen(false)
-    return
-  }
-}
-
 
   return (
     <nav className="w-full bg-black/90 text-white relative z-50">
@@ -74,13 +46,13 @@ const Header2 = ({ onOpenFavoritos }) => {
 
         {/* LOGO */}
         <div
-          onClick={redirectToPeliculas}
+          onClick={() => navigate('/')}
           className="flex items-center gap-2 cursor-pointer"
         >
           <img src={logo} alt="LogoPeliFlix" className="w-[120px] p-0.5" />
         </div>
 
-        {/* NAVBAR CENTRADO */}
+        {/* NAVBAR DESKTOP */}
         <div className="hidden md:flex flex-1 justify-center">
           <ul className="flex space-x-6 px-4">
             {navbarLinks.map((link) => (
@@ -88,7 +60,7 @@ const Header2 = ({ onOpenFavoritos }) => {
                 <a
                   href={link.href}
                   className="flex items-center gap-2 text-white hover:text-red-400 transition font-semibold cursor-pointer"
-                  onClick={(e) => handleLinkClick(link.name, e, link.href)}
+                  onClick={(e) => handleLinkClick(link.name, e)}
                 >
                   <i className={link.icon}></i>
                   {link.name}
@@ -98,9 +70,11 @@ const Header2 = ({ onOpenFavoritos }) => {
           </ul>
         </div>
 
-        {/* NOMBRE + LOGOUT */}
+        {/* USER + LOGOUT */}
         <div className="hidden md:flex items-center gap-4">
-          {user && <span className="text-white font-semibold">Hola, {user.name}</span>}
+          {user && (
+            <span className="text-white font-semibold">Hola, {user.name}</span>
+          )}
 
           {user && (
             <button
@@ -135,10 +109,13 @@ const Header2 = ({ onOpenFavoritos }) => {
       >
         <ul className="flex flex-col items-center">
           {navbarLinks.map((link) => (
-            <li key={link.id} className="py-3 border-b border-gray-700 w-full text-center">
+            <li
+              key={link.id}
+              className="py-3 border-b border-gray-700 w-full text-center"
+            >
               <a
                 href={link.href}
-                onClick={(e) => handleLinkClick(link.name, e, link.href)}
+                onClick={(e) => handleLinkClick(link.name, e)}
                 className="flex items-center justify-center gap-2 text-white font-semibold hover:text-red-400 transition cursor-pointer"
               >
                 <i className={link.icon}></i>
@@ -152,4 +129,4 @@ const Header2 = ({ onOpenFavoritos }) => {
   );
 };
 
-export default Header2;
+export default HeaderUser;

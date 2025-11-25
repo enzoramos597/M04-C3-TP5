@@ -17,20 +17,9 @@ const IniciarSesion = () => {
       return;
     }
 
-    // 🚨 NUEVA VALIDACIÓN DE ESTADO
-    if (user.estado === "0") {
-      toast.error(
-        "Tu cuenta está deshabilitada por falta de pago u otro inconveniente. " +
-        "Por favor contacta al administrador."
-      );
-      navigate("/cuenta-deshabilitada");
-      return;
-    }
-
-    // Si está activo (estado = 1)
-    toast.success(`Bienvenido ${user.name} 🎉`);
+    toast.success(`Bienvenido ${user.name} 🎉`)
     navigate("/profileselector");
-  };
+  }
 
   return (
     <div className="flex justify-center items-center min-h-[80vh] w-full">
@@ -75,26 +64,25 @@ const IniciarSesion = () => {
           >
             Iniciar sesión
           </button>
-
           <div className="flex justify-between items-center mt-4 text-sm text-gray-400">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="accent-red-600" />
-              Recordarme
-            </label>
-            <Link to="#" className="hover:underline text-gray-300">
-              ¿Olvidaste la contraseña?
-            </Link>
-          </div>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" className="accent-red-600" />
+            Recordarme
+          </label>
+          <Link to="#" className="hover:underline text-gray-300">
+            ¿Olvidaste la contraseña?
+          </Link>
+        </div>
 
-          <p className="text-gray-400 mt-6 text-sm">
-            ¿Primera vez en PeliFlix?
-            <Link
-              to="/registrar-usuario"
-              className="text-white font-semibold hover:underline ml-1"
-            >
-              Suscríbete ya.
-            </Link>
-          </p>
+        <p className="text-gray-400 mt-6 text-sm">
+          ¿Primera vez en PeliFlix?
+          <Link
+            to="/registrar-usuario"
+            className="text-white font-semibold hover:underline ml-1"
+          >
+            Suscríbete ya.
+          </Link>
+        </p>
         </form>
       </div>
     </div>

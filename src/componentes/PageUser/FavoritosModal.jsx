@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -40,11 +40,11 @@ const FavoritosModal = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 bg-black/60 flex justify-center items-center z-[999] backdrop-blur-sm px-4"
+      className="fixed inset-0 bg-black/60 flex justify-center items-center backdrop-blur-sm px-4 z-50"
       onClick={onClose}
     >
       <div
-        className="bg-neutral-900 text-white w-[88%] max-w-md rounded-xl p-5 shadow-xl border border-neutral-700 relative"
+        className="bg-neutral-900 text-white w-[88%] max-w-md rounded-xl p-5 shadow-xl border border-neutral-700 relative z-50 overflow-visible"
         onClick={(e) => e.stopPropagation()}
       >
         {/* BOTÓN CERRAR */}
@@ -67,40 +67,39 @@ const FavoritosModal = ({ isOpen, onClose }) => {
         ) : (
           <>
             <div className="max-h-80 overflow-y-auto px-2 pt-2">
-  {favoritos.map((fav) => (
-    <div
-      key={fav.id}
-      className="flex items-center bg-neutral-800 p-3 rounded-lg mb-3 shadow relative cursor-pointer
-                 border-2 border-transparent hover:border-red-500 transition-all duration-200
-                 hover:scale-[1.03] overflow-visible"
-    >
-      {/* Clic a detalle */}
-      <div
-        onClick={() => irADetalle(fav.id)}
-        className="flex items-center flex-1"
-      >
-        <img
-          src={fav.poster || fav.image || fav.image_url}
-          alt={fav.title}
-          className="w-16 h-20 object-cover rounded-md"
-        />
+              {favoritos.map((fav) => (
+                <div
+                  key={fav.id}
+                  className="flex items-center bg-neutral-800 p-3 rounded-lg mb-3 shadow relative cursor-pointer
+                    border-2 border-transparent hover:border-red-500 transition-all duration-200
+                    hover:scale-[1.03] overflow-visible"
+                >
+                  {/* Clic a detalle */}
+                  <div
+                    onClick={() => irADetalle(fav.id)}
+                    className="flex items-center flex-1"
+                  >
+                    <img
+                      src={fav.poster || fav.image || fav.image_url}
+                      alt={fav.title}
+                      className="w-16 h-20 object-cover rounded-md"
+                    />
 
-        <div className="ml-3">
-          <p className="font-semibold text-sm">{fav.title}</p>
-        </div>
-      </div>
+                    <div className="ml-3">
+                      <p className="font-semibold text-sm">{fav.title}</p>
+                    </div>
+                  </div>
 
-      {/* Tachito */}
-      <button
-        className="text-red-500 hover:text-red-300 text-xl ml-2"
-        onClick={() => eliminarFavorito(fav.id)}
-      >
-        <i className="bi bi-trash"></i>
-      </button>
-    </div>
-  ))}
-</div>
-
+                  {/* Tachito */}
+                  <button
+                    className="text-red-500 hover:text-red-300 text-xl ml-2"
+                    onClick={() => eliminarFavorito(fav.id)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </button>
+                </div>
+              ))}
+            </div>
 
             <button
               className="mt-4 w-full py-2 bg-red-600 hover:bg-red-500 rounded-lg font-semibold transition"
@@ -112,7 +111,7 @@ const FavoritosModal = ({ isOpen, onClose }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default FavoritosModal;

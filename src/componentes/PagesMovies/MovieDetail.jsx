@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext";
 import { API_PELICULAS } from "../../services/api";
+import "react-toastify/dist/ReactToastify.css";
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const MovieDetail = () => {
   const [loading, setLoading] = useState(false);
 
   const { user, updateUserFavoritos } = useAuth();
+  const navigate = useNavigate()
 
   // 1) Cargar película
   useEffect(() => {
@@ -21,7 +23,8 @@ const MovieDetail = () => {
         setMovie(res.data);
       } catch (err) {
         console.error(err);
-        toast.error("Error cargando la película");
+        toast.error("Error 404 esa ruta no se encuentra vuelve a INICIO");
+        navigate("/")
       } finally {
         setLoading(false);
       }
@@ -30,20 +33,20 @@ const MovieDetail = () => {
     loadMovie();
   }, [id]);
 
-  // 2) useMemo: siempre se ejecuta (porque los hooks NO pueden ir dentro de if o antes de returns)
+  // 2) Saber si está en favoritos
   const estaEnFavoritos = useMemo(() => {
     if (!user || !Array.isArray(user.favoritos) || !movie) return false;
-    return user.favoritos.some(f => String(f.id) === String(movie.id));
+    return user.favoritos.some((f) => String(f.id) === String(movie.id));
   }, [user, movie]);
 
-  // 3) Funciones de agregar / eliminar
+  // 3) Agregar a favoritos
   const agregarFavorito = async () => {
-    if (!user) return toast.error("Debes iniciar sesión")
+    if (!user) return toast.error("Debes iniciar sesión");
 
     try {
-      const lista = Array.isArray(user.favoritos) ? user.favoritos : []
+      const lista = Array.isArray(user.favoritos) ? user.favoritos : [];
 
-      if (lista.some(f => String(f.id) === String(movie.id))) {
+      if (lista.some((f) => String(f.id) === String(movie.id))) {
         toast.info("Ya está en favoritos");
         return;
       }
@@ -55,30 +58,35 @@ const MovieDetail = () => {
       };
 
       await updateUserFavoritos([...lista, nuevoFav]);
+
       toast.success("Película agregada a favoritos ❤️");
     } catch {
       toast.error("Error al agregar favorito");
     }
   };
 
+  // 4) Eliminar de favoritos
   const eliminarFavorito = async () => {
     if (!user) return toast.error("Debes iniciar sesión");
 
     try {
-      const nuevos = user.favoritos.filter(f => String(f.id) !== String(movie.id));
-      console.log("cuando doy click que hace?")
+      const nuevosFav = user.favoritos.filter(
+        (f) => String(f.id) !== String(movie.id)
+      );
+
+      await updateUserFavoritos(nuevosFav);
+
       toast.info("Película eliminada de favoritos ❌");
-      await updateUserFavoritos(nuevos);
-      
     } catch {
       toast.error("Error al eliminar favorito");
     }
   };
 
-  // 4) returns (estos sí pueden ir al final sin romper hooks)
+  // 5) Estado cargando / no encontrada
   if (loading) return <p className="text-white p-10">Cargando...</p>;
   if (!movie) return <p className="text-white p-10">No se encontró la película.</p>;
 
+  // 6) Limpiar y adaptar link de Youtube
   const toEmbedUrl = (url) => {
     if (!url) return "";
     if (url.includes("embed")) return url;
@@ -89,6 +97,8 @@ const MovieDetail = () => {
 
   return (
     <div className="min-h-screen bg-black text-white relative">
+      <ToastContainer />
+
       <div
         className="absolute inset-0 bg-cover bg-center blur-xl opacity-40"
         style={{ backgroundImage: `url(${movie.poster})` }}
@@ -96,7 +106,8 @@ const MovieDetail = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto p-6">
         <div className="flex flex-col md:flex-row gap-8 bg-neutral-900/90 p-6 rounded-2xl">
-
+          
+          {/* POSTER */}
           <div className="md:w-1/3 flex justify-center">
             <img
               src={movie.poster}
@@ -105,14 +116,16 @@ const MovieDetail = () => {
             />
           </div>
 
+          {/* INFO */}
           <div className="md:w-2/3 flex flex-col gap-5">
             <h1 className="text-5xl font-bold">{movie.original_title}</h1>
             <p className="text-gray-300 text-lg">{movie.detalle}</p>
 
             <p><span className="text-gray-400">Género:</span> {movie.genero?.join(", ")}</p>
             <p><span className="text-gray-400">Director:</span> {movie.Director?.join(", ")}</p>
-            <p><span className="text-gray-400">Actores:</span> {movie.actores?.join(", ")}</p>
+            <p><span className="text-gray-400">Actores:</span> {movie.Actores?.join(", ")}</p>
 
+            {/* FAVORITOS */}
             <div className="flex justify-center mt-2">
               {estaEnFavoritos ? (
                 <button
@@ -122,7 +135,6 @@ const MovieDetail = () => {
                   <span className="text-xl">🗑️</span>
                   <span>Quitar de Favoritos</span>
                 </button>
-
               ) : (
                 <button
                   onClick={agregarFavorito}

@@ -27,17 +27,10 @@ export const AuthProvider = ({ children }) => {
 
       if (!foundUser) return null;
 
-      // ❗ NO GUARDAR EN CONTEXTO SI ESTÁ DESHABILITADO
-      if (foundUser.estado === "0" || foundUser.estado === 0) {
-        return { ...foundUser, disabled: true }; // No guardamos nada en storage
-      }
-
-      // Si está habilitado → guardar user
       setUser(foundUser);
       localStorage.setItem("user", JSON.stringify(foundUser));
 
       return foundUser;
-
     } catch (error) {
       console.error("Error en login:", error);
       return null;
@@ -60,9 +53,8 @@ export const AuthProvider = ({ children }) => {
 
   // 🔴 LOGOUT
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem("user")
-    window.location.href = "/"; // fuerza recarga limpia
+    setUser(null);
+    localStorage.removeItem("user");
   };
 
   // ⭐ FAVORITOS DEL USER
@@ -81,42 +73,43 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUserProfile = async (profileId, updatedData) => {
-    if (!user) return;
+  if (!user) return;
 
-    try {
-      const updatedProfiles = user.perfiles.map((p) =>
-        p.id === profileId ? { ...p, ...updatedData } : p
-      );
+  try {
+    const updatedProfiles = user.perfiles.map((p) =>
+      p.id === profileId ? { ...p, ...updatedData } : p
+    );
 
-      const updatedUser = { ...user, perfiles: updatedProfiles };
+    const updatedUser = { ...user, perfiles: updatedProfiles };
 
-      await axios.put(`${API_USERS}/${user.id}`, updatedUser);
+    await axios.put(`${API_USERS}/${user.id}`, updatedUser);
 
-      setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
 
-    } catch (error) {
-      console.error("Error actualizando perfil:", error);
-    }
-  };
+  } catch (error) {
+    console.error("Error actualizando perfil:", error);
+  }
+}
 
-  const deleteUserProfile = async (profileId) => {
-    if (!user) return;
+const deleteUserProfile = async (profileId) => {
+  if (!user) return;
 
-    try {
-      const updatedProfiles = user.perfiles.filter((p) => p.id !== profileId);
+  try {
+    const updatedProfiles = user.perfiles.filter((p) => p.id !== profileId);
 
-      const updatedUser = { ...user, perfiles: updatedProfiles };
+    const updatedUser = { ...user, perfiles: updatedProfiles };
 
-      await axios.put(`${API_USERS}/${user.id}`, updatedUser);
+    await axios.put(`${API_USERS}/${user.id}`, updatedUser);
 
-      setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
 
-    } catch (error) {
-      console.error("Error eliminando perfil:", error);
-    }
-  };
+  } catch (error) {
+    console.error("Error eliminando perfil:", error);
+  }
+};
+
 
   return (
     <AuthContext.Provider

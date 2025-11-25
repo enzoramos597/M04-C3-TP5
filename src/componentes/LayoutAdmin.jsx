@@ -1,16 +1,16 @@
 import { useState } from "react";
-import Header2 from "../componentes/PageUser/Header2";
+import HeaderAdmin from "./PagesAdmin/HeaderAdmin";
 import Footer from "./Footer";
 import { Outlet } from "react-router-dom";
 import FavoritosModal from "../componentes/PageUser/FavoritosModal"; // default export
 
-const Layout2 = () => {
+const LayoutAdmin = () => {
   const [openFavModal, setOpenFavModal] = useState(false);
 
   return (
     <>
       {/* PASAMOS LA FUNCIÓN como prop */}
-      <Header2 onOpenFavoritos={() => setOpenFavModal(true)} />
+      <HeaderAdmin onOpenFavoritos={() => setOpenFavModal(true)} />
 
       <main>
         <Outlet />
@@ -27,4 +27,4 @@ const Layout2 = () => {
   );
 };
 
-export default Layout2;
+export default LayoutAdmin;

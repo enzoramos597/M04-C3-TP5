@@ -10,11 +10,7 @@ export default function DashboardAdmin() {
       {/* HEADER ESTILO NETFLIX */}
       <header className="flex justify-between items-center mb-10">
         <h1 className="text-4xl font-bold tracking-wide text-red-600">PELIFLIX ADMIN</h1>
-        <nav className="flex gap-6 text-lg">
-          {/*<Link className="hover:text-red-500 transition" to="/admin/peliculas">Películas</Link>
-          <Link className="hover:text-red-500 transition" to="/admin/usuarios">Usuarios</Link>
-          <Link className="hover:text-red-500 transition" to="/">Salir</Link>*/}
-        </nav>
+        
       </header>
 
       {/* GRID PRINCIPAL */}
@@ -30,7 +26,7 @@ export default function DashboardAdmin() {
               src={cargarpelicula}
               className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex items-end p-4">
               <p className="text-2xl font-bold">Cargar Película</p>
             </div>
           </Link>
@@ -41,12 +37,12 @@ export default function DashboardAdmin() {
           whileHover={{ scale: 1.05 }}
           className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900"
         >
-          <Link to="/peliculas" className="w-full h-full block">
+          <Link to="peliculas" className="w-full h-full block">
             <img
               src={verpeliculas}
               className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex items-end p-4">
               <p className="text-2xl font-bold">Ver Películas</p>
             </div>
           </Link>
@@ -62,7 +58,7 @@ export default function DashboardAdmin() {
               src={gestionusuarios}
               className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent flex items-end p-4">
               <p className="text-2xl font-bold">Gestión de Usuarios</p>
             </div>
           </Link>

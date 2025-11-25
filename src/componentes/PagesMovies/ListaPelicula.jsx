@@ -12,34 +12,25 @@ const ListaPelicula = () => {
   const [page, setPage] = useState(1);
 
   const navigate = useNavigate();
-  const { user, activeProfile } = useAuth();
+  const { user } = useAuth();
   const isAdmin = user?.type === "Administrador";
 
   const moviesPerPage = 12;
   const toastShownRef = useRef(false);
 
-  // 🛑 Si NO hay perfil activo → redirigir al selector
-  useEffect(() => {
-    if (!activeProfile) {
-      if (!toastShownRef.current) {
-        toast.error("Selecciona un perfil para ver las películas.");
-        toastShownRef.current = true;
-      }
-      navigate("/");
-    }
-  }, [activeProfile, navigate]);
-
   // 🟢 Cargar películas
   useEffect(() => {
     const fetchPeliculas = async () => {
       const res = await axios.get(`${API_PELICULAS}`);
-      const activas = res.data.filter((p) => p.estado?.toLowerCase() === "activo");
+      const activas = res.data.filter(
+        (p) => p.estado?.toLowerCase() === "activo"
+      );
       setPeliculas(activas);
     };
     fetchPeliculas();
   }, []);
 
-  // 🔍 FILTRO BUSCADOR
+  // 🔍 Filtro de búsqueda
   const filteredMovies = peliculas.filter((peli) => {
     const texto = search.toLowerCase();
     return (
@@ -50,7 +41,7 @@ const ListaPelicula = () => {
     );
   });
 
-  // ⚠ Toast solo 1 vez si no hay resultados
+  // ⚠ Toast cuando no encuentra resultados
   useEffect(() => {
     if (search.trim() !== "" && filteredMovies.length === 0) {
       if (!toastShownRef.current) {
@@ -66,26 +57,30 @@ const ListaPelicula = () => {
   }, [search, filteredMovies.length]);
 
   const totalPages =
-    filteredMovies.length === 0 ? 1 : Math.ceil(filteredMovies.length / moviesPerPage);
+    filteredMovies.length === 0
+      ? 1
+      : Math.ceil(filteredMovies.length / moviesPerPage);
 
   const startIndex = (page - 1) * moviesPerPage;
-  const currentMovies = filteredMovies.slice(startIndex, startIndex + moviesPerPage);
+  const currentMovies = filteredMovies.slice(
+    startIndex,
+    startIndex + moviesPerPage
+  );
   const noResults = filteredMovies.length === 0;
 
   return (
     <div className="min-h-screen bg-black/60 backdrop-blur-sm p-6">
-
       <ToastContainer />
 
       <h2 className="text-3xl font-bold mb-4 text-white text-center drop-shadow-lg">
         ¿Qué Películas te gustaría ver?
       </h2>
 
-      {/* 🔍 BUSCADOR */}
+      {/* Buscador */}
       <div className="max-w-xl mx-auto mb-6">
         <input
           type="text"
-          placeholder="Buscar películas por título, actores, género, director..."
+          placeholder="Buscar películas..."
           value={search}
           onChange={(e) => {
             setPage(1);
@@ -130,12 +125,15 @@ const ListaPelicula = () => {
               </div>
 
               <div className="mt-2 px-1 text-center">
-                <h3 className="text-white font-semibold truncate">{peli.original_title}</h3>
+                <h3 className="text-white font-semibold truncate">
+                  {peli.original_title}
+                </h3>
                 <p className="text-gray-400 text-sm truncate">
                   {peli.genero?.join(", ") || "Sin género"}
                 </p>
               </div>
 
+              {/* Botón solo Admin */}
               {isAdmin && (
                 <button
                   onClick={() => navigate(`/updatemovie/${peli.id}`)}
@@ -149,7 +147,7 @@ const ListaPelicula = () => {
         })}
       </div>
 
-      {/* PAGINACIÓN */}
+      {/* Paginación */}
       <div className="flex justify-center gap-4 mt-6 text-white">
         <button
           disabled={page === 1 || noResults}
@@ -159,7 +157,9 @@ const ListaPelicula = () => {
           ◀ Anterior
         </button>
 
-        <span>Página {page} de {totalPages}</span>
+        <span>
+          Página {page} de {totalPages}
+        </span>
 
         <button
           disabled={page === totalPages || noResults}
@@ -169,7 +169,6 @@ const ListaPelicula = () => {
           Siguiente ▶
         </button>
       </div>
-
     </div>
   );
 };

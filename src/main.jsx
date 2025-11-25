@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify"
 import { ProfileProvider } from './contexts/ProfileContext.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+
     <AuthProvider>
        <ProfileProvider> 
       <BrowserRouter>
@@ -17,5 +17,5 @@ createRoot(document.getElementById('root')).render(
       </BrowserRouter>
       </ProfileProvider> 
     </AuthProvider>
-  </StrictMode>
+
 )

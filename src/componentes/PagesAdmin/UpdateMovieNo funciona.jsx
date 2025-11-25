@@ -21,13 +21,9 @@ const UpdateMovie = () => {
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const res = await axios.get(
-          `${API_PELICULAS}/${id}`
-        );
-
+        const res = await axios.get(`${API_PELICULAS}/${id}`);
         const movie = res.data;
 
-        // Setear los valores en el formulario 👇
         setValue("original_title", movie.original_title);
         setValue("detalle", movie.detalle);
         setValue("actores", movie.actores?.join(", "));
@@ -37,7 +33,7 @@ const UpdateMovie = () => {
         setValue("type", movie.type?.join(", "));
         setValue("link", movie.link);
         setValue("anio", movie.anio);
-        setValue("estado", movie.estado); // 🔥 dropdown
+        setValue("estado", movie.estado);
       } catch (err) {
         console.error(err);
         toast.error("Error al cargar la película ❌");
@@ -59,10 +55,7 @@ const UpdateMovie = () => {
         anio: Number(data.anio)
       };
 
-      await axios.put(
-        `${API_PELICULAS}/${id}`,
-        updatedMovie
-      );
+      await axios.put(`${API_PELICULAS}/${id}`, updatedMovie);
 
       toast.success("Película actualizada correctamente 🎬");
 
@@ -74,7 +67,6 @@ const UpdateMovie = () => {
       });
 
       navigate("/peliculas");
-
     } catch (err) {
       console.error(err);
       toast.error("Error al actualizar la película ❌");
@@ -82,20 +74,22 @@ const UpdateMovie = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black/90 text-white px-4">
-      <div className="bg-black/90 mb-5 p-6 rounded-xl shadow-lg w-full max-w-lg mt-5 ">
+    <div className="min-h-screen bg-gradient-to-b bg-black/90 text-white px-4">
+
+      {/* Contenedor Netflix Style */}
+      <div className="max-w-xl mx-auto  bg-zinc-900/ backdrop-blur-xl p-8 rounded-xl border border-red-600/40 shadow-2xl shadow-red-900/20">
 
         <h2 className="text-4xl font-extrabold mb-6 text-center text-red-600 drop-shadow-lg tracking-wide">
           Editar Película
         </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
 
           {/* TITLE */}
           <input
             {...register("original_title", { required: "El título es obligatorio" })}
             placeholder="Título original"
-            className="p-3 bg-gray-700 rounded"
+            className="p-3 bg-zinc-800 rounded border border-zinc-700 focus:border-red-600 outline-none"
           />
           {errors.original_title && <p className="text-red-500">{errors.original_title.message}</p>}
 
@@ -103,65 +97,24 @@ const UpdateMovie = () => {
           <textarea
             {...register("detalle", { required: "El detalle es obligatorio" })}
             placeholder="Descripción"
-            className="p-3 bg-gray-700 rounded h-24"
+            className="p-3 bg-zinc-800 rounded border border-zinc-700 focus:border-red-600 outline-none h-24"
           />
           {errors.detalle && <p className="text-red-500">{errors.detalle.message}</p>}
 
-          {/* ACTORES */}
-          <input
-            {...register("actores")}
-            placeholder="Actores separados por coma"
-            className="p-3 bg-gray-700 rounded"
-          />
+          {/* Inputs generales */}
+          <input {...register("actores")} placeholder="Actores separados por coma" className="netflix-input" />
+          <input {...register("poster")} placeholder="URL del poster" className="netflix-input" />
+          <input {...register("genero")} placeholder="Géneros separados por coma" className="netflix-input" />
+          <input {...register("Director")} placeholder="Director(es)" className="netflix-input" />
+          <input {...register("type")} placeholder="Tipo" className="netflix-input" />
+          <input type="number" {...register("anio")} placeholder="Año" className="netflix-input" />
+          <input {...register("link")} placeholder="Link embed YouTube" className="netflix-input" />
 
-          {/* POSTER */}
-          <input
-            {...register("poster")}
-            placeholder="URL del poster"
-            className="p-3 bg-gray-700 rounded"
-          />
-
-          {/* GENERO */}
-          <input
-            {...register("genero")}
-            placeholder="Géneros separados por coma"
-            className="p-3 bg-gray-700 rounded"
-          />
-
-          {/* DIRECTOR */}
-          <input
-            {...register("Director")}
-            placeholder="Director(es) separados por coma"
-            className="p-3 bg-gray-700 rounded"
-          />
-
-          {/* TYPE */}
-          <input
-            {...register("type")}
-            placeholder="Tipo (Película, Serie, Acción...)"
-            className="p-3 bg-gray-700 rounded"
-          />
-
-          {/* AÑO */}
-          <input
-            type="number"
-            {...register("anio")}
-            placeholder="Año"
-            className="p-3 bg-gray-700 rounded"
-          />
-
-          {/* LINK */}
-          <input
-            {...register("link")}
-            placeholder="Link embed YouTube"
-            className="p-3 bg-gray-700 rounded"
-          />
-
-          {/* 🔥 ESTADO CON DROPDOWN */}
+          {/* ESTADO */}
           <label className="text-sm text-gray-300">Estado</label>
           <select
             {...register("estado")}
-            className="p-3 bg-gray-700 rounded text-white"
+            className="p-3 bg-zinc-800 rounded border border-zinc-700 focus:border-red-600 outline-none"
           >
             <option value="activo">Activo</option>
             <option value="inactivo">Inactivo</option>
@@ -170,16 +123,16 @@ const UpdateMovie = () => {
           {/* BOTÓN SUBMIT */}
           <button
             type="submit"
-            className="bg-red-600 hover:bg-red-700 transition p-3 rounded text-lg font-semibold mt-3"
+            className="bg-red-600 hover:bg-red-700 transition p-3 rounded text-lg font-semibold shadow-md shadow-red-900"
           >
-            Actualizar Película
+            Actualizar
           </button>
 
           {/* CANCELAR */}
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="bg-gray-600 hover:bg-gray-700 transition p-3 rounded text-lg font-semibold"
+            className="bg-gray-700 hover:bg-gray-600 transition p-3 rounded text-lg font-semibold"
           >
             Cancelar
           </button>

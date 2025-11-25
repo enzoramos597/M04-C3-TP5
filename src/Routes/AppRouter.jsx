@@ -2,11 +2,12 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 {/*Layout*/}
 import Layout from '../componentes/Layout'    
-import Layout2 from '../componentes/Layout2'  
+import LayoutUser from '../componentes/LayoutUser'  
+import LayoutAdmin from '../componentes/LayoutAdmin'
 
 import Main from '../componentes/Main'
 import IniciarSesion from '../componentes/IniciarSesion'
-import RegisterForm from '../componentes/RegisterForm'
+import RegisterFormUser from '../componentes/PageUser/RegisterFormUser'
 import RegisterFormAdmin from '../componentes/PagesAdmin/RegisterFormAdmin'
 
 import ProfileSelectorUser from '../componentes/PageUser/ProfileSelectorUser'
@@ -24,6 +25,12 @@ import ListaPelicula from '../componentes/PagesMovies/ListaPelicula'
 import MovieDetail from '../componentes/PagesMovies/MovieDetail'
 import UpdateMovie from '../componentes/PagesAdmin/UpdateMovie'
 import ProfileSelectorAdmin from '../componentes/PagesAdmin/ProfileSelectorAdmin'
+import ManageProfilesUser from '../componentes/PageUser/ManageProfilesUser'
+import EditProfileUser from '../componentes/PageUser/EditProfileUser'
+import DetailPerfilAdmin from '../componentes/PagesAdmin/DetailPerfilAdmin'
+import CuentaDeshabilitada from '../componentes/PageUser/CuentaDeshabilitada'
+import ValidateIdRoute from './ValidateIdRoute'
+
 
 const AppRouter = () => {
 
@@ -48,31 +55,37 @@ const AppRouter = () => {
           <Route path="/" element={<Layout />}>
             <Route index element={<Main />} />
             <Route path="iniciar-sesion" element={<IniciarSesion />} />
-            <Route path="registrar-usuario" element={<RegisterForm />} />
+             <Route path='peliculas' element={<ListaPelicula />} />
+            <Route path="registrar-usuario" element={<RegisterFormUser />} />
             <Route path="register-admin" element={<RegisterFormAdmin />} />
-            <Route path="uploadmovie" element={<Navigate to="/iniciar-sesion" />} />
+             <Route path="cuenta-deshabilitada" element={<CuentaDeshabilitada />} />
+           {/* <Route path="uploadmovie" element={<Navigate to="/iniciar-sesion" />} />*/}
           </Route>
         )}
 
         {/* 🔵 RUTAS USUARIO */}
         {isUser && (
-          <Route path="/" element={<Layout2 />}>     
-            <Route index element={<ProfileSelectorUser/>}/>
-            <Route path='/peliculas' element={<ListaPelicula />} />
+          <Route path="/" element={<LayoutUser />}>     
+            <Route index element={<ProfileSelectorUser/> }/>
+            <Route path='peliculas' element={<ListaPelicula />} />
             <Route path="peliculas/:id" element={<MovieDetail />} />
-            <Route path="/profileselector" element={<ProfileSelectorUser />} />
-            <Route path="/createperfiluser" element={<CreateProfileUser />} />
+            <Route path="profileselector/:id" element={<ProfileSelectorUser />} />
+            <Route path="createperfiluser" element={<CreateProfileUser />} />
+            <Route path="manageprofiles" element={<ManageProfilesUser />} />
+            <Route path="/edit-profile/:id" element={<EditProfileUser />} />
+           
           </Route>
         )}
 
         {/* 🔴 RUTAS ADMIN */}
         {isAdmin && (
-          <Route path="/" element={<Layout2 />}>
+          <Route path="/" element={<LayoutAdmin />}>
             <Route index element={<DashboardAdmin />} />
             <Route path= "peliculas" element= {<ListaPelicula />} />
             <Route path="peliculas/:id" element={<MovieDetail />} />
             <Route path="uploadmovie" element={<UploadMovie />} />
             <Route path="gestion-usuarios" element={<ProfileSelectorAdmin/>} />
+            <Route path='/gestion-usuarios/usuarios/:id' element={<DetailPerfilAdmin/>}/>
             {/*<Route path="dashboard-admin" element= {<DashboardAdmin />} />*/}
             <Route path="register-admin" element={<RegisterFormAdmin />} />
             <Route path="updatemovie/:id" element={<UpdateMovie />} />
