@@ -92,6 +92,7 @@ const UpdateMovie = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
           {/* TITLE */}
+          <label className="text-gray-300 font-semibold">Titulo:</label>
           <input
             {...register("original_title", { required: "El título es obligatorio" })}
             placeholder="Título original"
@@ -100,6 +101,7 @@ const UpdateMovie = () => {
           {errors.original_title && <p className="text-red-500">{errors.original_title.message}</p>}
 
           {/* DETALLE */}
+          <label className="text-gray-300 font-semibold">Detalle:</label>
           <textarea
             {...register("detalle", { required: "El detalle es obligatorio" })}
             placeholder="Descripción"
@@ -108,6 +110,7 @@ const UpdateMovie = () => {
           {errors.detalle && <p className="text-red-500">{errors.detalle.message}</p>}
 
           {/* ACTORES */}
+          <label className="text-gray-300 font-semibold">Actores:</label>
           <input
             {...register("actores")}
             placeholder="Actores separados por coma"
@@ -115,6 +118,7 @@ const UpdateMovie = () => {
           />
 
           {/* POSTER */}
+          <label className="text-gray-300 font-semibold">Poster:</label>
           <input
             {...register("poster")}
             placeholder="URL del poster"
@@ -122,6 +126,7 @@ const UpdateMovie = () => {
           />
 
           {/* GENERO */}
+          <label className="text-gray-300 font-semibold">Géneros:</label>
           <input
             {...register("genero")}
             placeholder="Géneros separados por coma"
@@ -129,6 +134,7 @@ const UpdateMovie = () => {
           />
 
           {/* DIRECTOR */}
+          <label className="text-gray-300 font-semibold">Director:</label>
           <input
             {...register("Director")}
             placeholder="Director(es) separados por coma"
@@ -136,6 +142,7 @@ const UpdateMovie = () => {
           />
 
           {/* TYPE */}
+          <label className="text-gray-300 font-semibold">Tipo de pelicula:</label>
           <input
             {...register("type")}
             placeholder="Tipo (Película, Serie, Acción...)"
@@ -143,6 +150,7 @@ const UpdateMovie = () => {
           />
 
           {/* AÑO */}
+          <label className="text-gray-300 font-semibold">Año:</label>
           <input
             type="number"
             {...register("anio")}
@@ -151,9 +159,10 @@ const UpdateMovie = () => {
           />
 
           {/* LINK */}
+          <label className="text-gray-300 font-semibold">Link del Trailer:</label>
           <input
             {...register("link")}
-            placeholder="Link embed YouTube"
+            placeholder="Link YouTube"
             className="p-3 bg-gray-700 rounded"
           />
 

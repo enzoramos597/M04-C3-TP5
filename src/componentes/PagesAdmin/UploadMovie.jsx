@@ -52,7 +52,7 @@ const UploadMovie = () => {
 
       await axios.post(`${API_PELICULAS}`, newMovie);
 
-      toast.success("Película cargada correctamente 🎬");
+      //toast.success("Película cargada correctamente 🎬");
 
       await Swal.fire({
         title: "¡Película guardada!",

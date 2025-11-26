@@ -102,7 +102,7 @@ const ListaPelicula = () => {
             >
               <div
                 onClick={() => navigate(`/peliculas/${peli.id}`)}
-                className="relative group overflow-hidden rounded-lg"
+                className="relative group overflow-hidden rounded-lg flex justify-center items-center"
               >
                 <span className="absolute top-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded shadow-lg">
                   {year}
