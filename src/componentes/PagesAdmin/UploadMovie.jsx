@@ -50,7 +50,7 @@ const UploadMovie = () => {
         estado: "activo",
       };
 
-      await axios.post(`${API_PELICULAS}/peliculas`, newMovie);
+      await axios.post(`${API_PELICULAS}`, newMovie);
 
       toast.success("Película cargada correctamente 🎬");
 
