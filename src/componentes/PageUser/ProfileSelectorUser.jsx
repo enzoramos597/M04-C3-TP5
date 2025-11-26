@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import ProfileCard from '../ProfileCard';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const ProfileSelectorUser = () => {
@@ -19,7 +19,7 @@ console.log('Mostrar ID', user?.id);
         if (userId) {
             refreshUser(userId);
         }
-    }, [userId]);   // <---- AQUÍ ESTÁ EL FIX
+    }, [userId, refreshUser]);   // <---- AQUÍ ESTÁ EL FIX
 
     if (!user) {
         return (

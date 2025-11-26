@@ -10,12 +10,23 @@ const FavoritosModal = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (!isOpen) return;
 
-    if (user?.favoritos && Array.isArray(user.favoritos)) {
-      setFavoritos(user.favoritos);
-    } else {
-      const saved = JSON.parse(localStorage.getItem("favoritos")) || [];
-      setFavoritos(saved);
-    }
+    let cancelled = false;
+
+    // Defer the state update so we don't call setState synchronously inside the effect.
+    Promise.resolve().then(() => {
+      if (cancelled) return;
+
+      if (user?.favoritos && Array.isArray(user.favoritos)) {
+        setFavoritos(user.favoritos);
+      } else {
+        const saved = JSON.parse(localStorage.getItem("favoritos")) || [];
+        setFavoritos(saved);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [isOpen, user]);
 
   if (!isOpen) return null;
