@@ -123,7 +123,7 @@ const MovieDetail = () => {
 
             <p><span className="text-gray-400">Género:</span> {movie.genero?.join(", ")}</p>
             <p><span className="text-gray-400">Director:</span> {movie.Director?.join(", ")}</p>
-            <p><span className="text-gray-400">Actores:</span> {movie.Actores?.join(", ")}</p>
+            <p><span className="text-gray-400">Actores:</span> {movie.actores?.join(", ")}</p>
 
             {/* FAVORITOS */}
             <div className="flex justify-center mt-2">
