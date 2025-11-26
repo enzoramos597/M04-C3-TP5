@@ -1,19 +1,19 @@
-import { useEffect, useState, useRef } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-import { API_PELICULAS } from "../../services/api";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState, useRef } from "react"
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../contexts/AuthContext"
+import { API_PELICULAS } from "../../services/api"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const ListaPelicula = () => {
-  const [peliculas, setPeliculas] = useState([]);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
+  const [peliculas, setPeliculas] = useState([])
+  const [search, setSearch] = useState("")
+  const [page, setPage] = useState(1)
 
   const navigate = useNavigate();
   const { user } = useAuth();
-  const isAdmin = user?.type === "Administrador";
+  const isAdmin = user?.type === "Administrador"
 
   const moviesPerPage = 12;
   const toastShownRef = useRef(false);
@@ -69,7 +69,7 @@ const ListaPelicula = () => {
   const noResults = filteredMovies.length === 0;
 
   return (
-    <div className="min-h-screen bg-black/60 backdrop-blur-sm p-6">
+    <div className="min-h-screen bg-black/60 backdrop-blur-sm p-8 ">
       <ToastContainer />
 
       <h2 className="text-3xl font-bold mb-4 text-white text-center drop-shadow-lg">
@@ -77,21 +77,21 @@ const ListaPelicula = () => {
       </h2>
 
       {/* Buscador */}
-      <div className="max-w-xl mx-auto mb-6">
+      <div className="max-w-xl mx-auto mb-6 mt-5">
         <input
           type="text"
           placeholder="Buscar películas..."
           value={search}
           onChange={(e) => {
-            setPage(1);
-            setSearch(e.target.value);
+            setPage(1)
+            setSearch(e.target.value)
           }}
-          className="w-full p-3 rounded-lg bg-neutral-900 text-white border border-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="w-full p-3 rounded-lg bg-neutral-900 text-white border border-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 mt-2 mb-4"
         />
       </div>
 
       {/* GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
         {currentMovies.map((peli) => {
           const year = peli.anio || "-";
 

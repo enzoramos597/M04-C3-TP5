@@ -18,7 +18,7 @@ const IniciarSesion = () => {
     }
 
     // 🚨 NUEVA VALIDACIÓN DE ESTADO
-    if (user.estado === "0") {
+    if (user.estado === 0) {
       toast.error(
         "Tu cuenta está deshabilitada por falta de pago u otro inconveniente. " +
         "Por favor contacta al administrador."
@@ -33,7 +33,7 @@ const IniciarSesion = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[80vh] w-full">
+    <div className="flex justify-center items-center min-h-[82vh] w-full">
       <div className="bg-neutral-900 w-full max-w-md p-8 rounded-lg relative">
 
         <Link

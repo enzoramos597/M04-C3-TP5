@@ -115,7 +115,7 @@ const CreateProfileUser = () => {
                 alt="avatar"
                 onClick={() => {
                   setSelectedAvatar(avatar);
-                  setValue("avatar", avatar, { shouldValidate: true });
+                  setValue("avatar", avatar, { shouldValidate: true })
                 }}
                 className={`w-20 h-20 rounded-md object-cover cursor-pointer border-4 transition-all duration-200
                 ${

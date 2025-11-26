@@ -1,17 +1,17 @@
-import { useEffect, useState, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
-import { useAuth } from "../../contexts/AuthContext";
-import { API_PELICULAS } from "../../services/api";
-import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState, useMemo } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import axios from "axios"
+import { toast, ToastContainer } from "react-toastify"
+import { useAuth } from "../../contexts/AuthContext"
+import { API_PELICULAS } from "../../services/api"
+import "react-toastify/dist/ReactToastify.css"
 
 const MovieDetail = () => {
   const { id } = useParams();
-  const [movie, setMovie] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [movie, setMovie] = useState(null)
+  const [loading, setLoading] = useState(false)
 
-  const { user, updateUserFavoritos } = useAuth();
+  const { user, updateUserFavoritos } = useAuth()
   const navigate = useNavigate()
 
   // 1) Cargar película
@@ -19,36 +19,36 @@ const MovieDetail = () => {
     const loadMovie = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${API_PELICULAS}/${id}`);
-        setMovie(res.data);
+        const res = await axios.get(`${API_PELICULAS}/${id}`)
+        setMovie(res.data)
       } catch (err) {
-        console.error(err);
-        toast.error("Error 404 esa ruta no se encuentra vuelve a INICIO");
+        console.error(err)
+        toast.error("Error 404 esa ruta no se encuentra vuelve a INICIO")
         navigate("/")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     };
 
     loadMovie();
-  }, [id]);
+  }, [id])
 
   // 2) Saber si está en favoritos
   const estaEnFavoritos = useMemo(() => {
-    if (!user || !Array.isArray(user.favoritos) || !movie) return false;
-    return user.favoritos.some((f) => String(f.id) === String(movie.id));
-  }, [user, movie]);
+    if (!user || !Array.isArray(user.favoritos) || !movie) return false
+    return user.favoritos.some((f) => String(f.id) === String(movie.id))
+  }, [user, movie])
 
   // 3) Agregar a favoritos
   const agregarFavorito = async () => {
-    if (!user) return toast.error("Debes iniciar sesión");
+    if (!user) return toast.error("Debes iniciar sesión")
 
     try {
-      const lista = Array.isArray(user.favoritos) ? user.favoritos : [];
+      const lista = Array.isArray(user.favoritos) ? user.favoritos : []
 
       if (lista.some((f) => String(f.id) === String(movie.id))) {
-        toast.info("Ya está en favoritos");
-        return;
+        toast.info("Ya está en favoritos")
+        return
       }
 
       const nuevoFav = {
@@ -57,13 +57,13 @@ const MovieDetail = () => {
         poster: movie.poster,
       };
 
-      await updateUserFavoritos([...lista, nuevoFav]);
+      await updateUserFavoritos([...lista, nuevoFav])
 
-      toast.success("Película agregada a favoritos ❤️");
+      toast.success("Película agregada a favoritos ❤️")
     } catch {
-      toast.error("Error al agregar favorito");
+      toast.error("Error al agregar favorito")
     }
-  };
+  }
 
   // 4) Eliminar de favoritos
   const eliminarFavorito = async () => {
@@ -72,19 +72,19 @@ const MovieDetail = () => {
     try {
       const nuevosFav = user.favoritos.filter(
         (f) => String(f.id) !== String(movie.id)
-      );
+      )
 
       await updateUserFavoritos(nuevosFav);
 
-      toast.info("Película eliminada de favoritos ❌");
+      toast.info("Película eliminada de favoritos ❌")
     } catch {
-      toast.error("Error al eliminar favorito");
+      toast.error("Error al eliminar favorito")
     }
   };
 
   // 5) Estado cargando / no encontrada
-  if (loading) return <p className="text-white p-10">Cargando...</p>;
-  if (!movie) return <p className="text-white p-10">No se encontró la película.</p>;
+  if (loading) return <p className="text-white p-10">Cargando...</p>
+  if (!movie) return <p className="text-white p-10">No se encontró la película.</p>
 
   // 6) Limpiar y adaptar link de Youtube
   const toEmbedUrl = (url) => {
@@ -92,7 +92,7 @@ const MovieDetail = () => {
     if (url.includes("embed")) return url;
     if (url.includes("watch?v=")) return url.replace("watch?v=", "embed/");
     if (url.includes("youtu.be/")) return url.replace("youtu.be/", "www.youtube.com/embed/");
-    return url;
+    return url
   };
 
   return (

@@ -33,8 +33,8 @@ const UploadMovie = () => {
       );
 
       if (tituloExiste) {
-        toast.error("Ya existe una película con ese título ❌");
-        return;
+        toast.error("Ya existe una película con ese título ❌")
+        return
       }
 
       const newMovie = {
@@ -50,9 +50,9 @@ const UploadMovie = () => {
         estado: "activo",
       };
 
-      await axios.post(`${API_PELICULAS}`, newMovie);
+      await axios.post(`${API_PELICULAS}`, newMovie)
 
-      //toast.success("Película cargada correctamente 🎬");
+      //toast.success("Película cargada correctamente 🎬")
 
       await Swal.fire({
         title: "¡Película guardada!",
@@ -64,7 +64,7 @@ const UploadMovie = () => {
       reset();
     } catch (error) {
       console.error(error);
-      toast.error("Error al guardar la película");
+      toast.error("Error al guardar la película")
     }
   };
 
@@ -81,7 +81,7 @@ const UploadMovie = () => {
         </Link>
 
         <h2 className="text-3xl font-bold text-center text-white mb-8">
-          Subir Película
+          Cargar Película
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">

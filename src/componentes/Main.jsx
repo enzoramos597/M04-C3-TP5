@@ -1,14 +1,14 @@
-import { useState } from "react";
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css";
-import tendencia1 from '../assets/Merlina.jpg';
-import tendencia2 from '../assets/Happy.jpg';
-import tendencia3 from '../assets/Naruto.jpg';
-import tendencia4 from '../assets/Enelbarro.jpg';
-import tendencia5 from '../assets/Otra_vida.webp';
-import Slider from "react-slick";
-import LogoAnimado from "./LogoAnimado";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react"
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
+import tendencia1 from '../assets/Merlina.jpg'
+import tendencia2 from '../assets/Happy.jpg'
+import tendencia3 from '../assets/Naruto.jpg'
+import tendencia4 from '../assets/Enelbarro.jpg'
+import tendencia5 from '../assets/Otra_vida.webp'
+import Slider from "react-slick"
+import LogoAnimado from "./LogoAnimado"
+import { useNavigate } from "react-router-dom"
 
 // Flecha siguiente
 const NextArrow = ({ onClick, disabled }) => (
@@ -78,7 +78,7 @@ const Main = () => {
   const totalSlides = trendData.length;
   const slidesToShow = 
     window.innerWidth < 640 ? 1 : 
-    window.innerWidth < 1024 ? 2 : slidesToShowDefault;
+    window.innerWidth < 1024 ? 2 : slidesToShowDefault
 
   const isPrevDisabled = currentSlide === 0;
   const isNextDisabled = currentSlide >= totalSlides - slidesToShow;

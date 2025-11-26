@@ -19,21 +19,21 @@ const RegisterFormAdmin = () => {
   // 🟢 Validar correo existente
   const checkEmailExists = async (email) => {
     try {
-      const res = await axios.get(API_USERS);
-      const exists = res.data.some((u) => u.correo === email);
+      const res = await axios.get(API_USERS)
+      const exists = res.data.some((u) => u.correo === email)
       return exists;
     } catch (error) {
-      console.error("Error checking email:", error);
-      return false;
+      console.error("Error checking email:", error)
+      return false
     }
   };
 
   const onSubmit = async (data) => {
     try {
-      const exists = await checkEmailExists(data.email);
+      const exists = await checkEmailExists(data.email)
 
       if (exists) {
-        toast.error("Este correo ya está registrado 🛑");
+        toast.error("Este correo ya está registrado 🛑")
         return;
       }
 
@@ -47,9 +47,9 @@ const RegisterFormAdmin = () => {
         estado: 1,       // Activo por defecto
       };
 
-      await createProfile(newUser);
+      await createProfile(newUser)
 
-      toast.success("Usuario creado correctamente 🎉");
+      toast.success("Usuario creado correctamente 🎉")
 
       await Swal.fire({
         title: "¡Cuenta creada!",
@@ -58,13 +58,13 @@ const RegisterFormAdmin = () => {
         confirmButtonColor: "#e50914",
       });
 
-      navigate("/");
+      navigate("/")
 
     } catch (error) {
-      toast.error("Error al crear el usuario");
-      console.error(error);
+      toast.error("Error al crear el usuario")
+      console.error(error)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center">

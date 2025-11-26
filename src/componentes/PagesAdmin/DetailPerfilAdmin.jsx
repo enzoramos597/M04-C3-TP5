@@ -1,17 +1,17 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
+import { useParams, Link, useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react"
+import Swal from "sweetalert2"
+import { toast } from "react-toastify"
 import { useProfiles } from "../../contexts/ProfileContext"
-import axios from "axios";
-import { API_USERS } from "../../services/api";
+import axios from "axios"
+import { API_USERS } from "../../services/api"
 
 const DetailPerfilAdmin = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { updateProfile } = useProfiles();
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const { updateProfile } = useProfiles()
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
 
   // ============================
   //  CARGAR USUARIO POR ID
@@ -20,8 +20,8 @@ const DetailPerfilAdmin = () => {
     axios
       .get(`${API_USERS}/${id}`)
       .then((res) => setUser(res.data))
-      .catch(() => toast.error("Error al cargar el usuario"));
-  }, [id]);
+      .catch(() => toast.error("Error al cargar el usuario"))
+  }, [id])
 
   // ============================
   //  HANDLE CHANGE
@@ -41,8 +41,8 @@ const DetailPerfilAdmin = () => {
     return (
       name.trim().charAt(0).toUpperCase() +
       apellido.trim().charAt(0).toUpperCase()
-    );
-  };
+    )
+  }
 
   // ============================
   // GUARDAR CAMBIOS
@@ -63,20 +63,20 @@ const DetailPerfilAdmin = () => {
     if (!confirm.isConfirmed) return;
 
     try {
-      let finalAvatar = user.avatar?.trim();
+      let finalAvatar = user.avatar?.trim()
 
       // VALIDAR IMAGEN
       if (finalAvatar) {
-        const isValidImage = /\.(jpg|jpeg|png|webp)$/i.test(finalAvatar);
+        const isValidImage = /\.(jpg|jpeg|png|webp)$/i.test(finalAvatar)
         if (!isValidImage) {
-          toast.error("El avatar debe ser JPG, JPEG, PNG o WEBP");
-          return;
+          toast.error("El avatar debe ser JPG, JPEG, PNG o WEBP")
+          return
         }
       }
 
       // SI NO HAY AVATAR → INICIALES
       if (!finalAvatar) {
-        finalAvatar = getInitials(user.name, user.apellido);
+        finalAvatar = getInitials(user.name, user.apellido)
       }
 
       const updatedUser = {
@@ -100,14 +100,14 @@ const DetailPerfilAdmin = () => {
         confirmButtonColor: "#e50914",
       });
 
-      navigate("/gestion-usuarios");
+      navigate("/gestion-usuarios")
     } catch (error) {
-      toast.error("Error al actualizar el usuario");
-      console.error(error);
+      toast.error("Error al actualizar el usuario")
+      console.error(error)
     }
   };
 
-  if (!user) return <p className="text-white">Cargando usuario...</p>;
+  if (!user) return <p className="text-white">Cargando usuario...</p>
 
   return (
     <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4 bg-black/90">

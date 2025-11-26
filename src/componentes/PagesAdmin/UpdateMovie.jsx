@@ -28,24 +28,24 @@ const UpdateMovie = () => {
         const movie = res.data;
 
         // Setear los valores en el formulario 👇
-        setValue("original_title", movie.original_title);
-        setValue("detalle", movie.detalle);
-        setValue("actores", movie.actores?.join(", "));
-        setValue("poster", movie.poster);
-        setValue("genero", movie.genero?.join(", "));
-        setValue("Director", movie.Director?.join(", "));
-        setValue("type", movie.type?.join(", "));
-        setValue("link", movie.link);
-        setValue("anio", movie.anio);
+        setValue("original_title", movie.original_title)
+        setValue("detalle", movie.detalle)
+        setValue("actores", movie.actores?.join(", "))
+        setValue("poster", movie.poster)
+        setValue("genero", movie.genero?.join(", "))
+        setValue("Director", movie.Director?.join(", "))
+        setValue("type", movie.type?.join(", "))
+        setValue("link", movie.link)
+        setValue("anio", movie.anio)
         setValue("estado", movie.estado); // 🔥 dropdown
       } catch (err) {
         console.error(err);
-        toast.error("Error al cargar la película ❌");
+        toast.error("Error al cargar la película ❌")
       }
-    };
+    }
 
     fetchMovie();
-  }, [id, setValue]);
+  }, [id, setValue])
 
   // 👉 ENVIAR ACTUALIZACIÓN
   const onSubmit = async (data) => {
@@ -62,9 +62,9 @@ const UpdateMovie = () => {
       await axios.put(
         `${API_PELICULAS}/${id}`,
         updatedMovie
-      );
+      )
 
-      toast.success("Película actualizada correctamente 🎬");
+      //toast.success("Película actualizada correctamente 🎬")
 
       await Swal.fire({
         title: "Actualizado ✔",
@@ -73,11 +73,11 @@ const UpdateMovie = () => {
         confirmButtonColor: "#e50914"
       });
 
-      navigate("/peliculas");
+      navigate("/peliculas")
 
     } catch (err) {
       console.error(err);
-      toast.error("Error al actualizar la película ❌");
+      toast.error("Error al actualizar la película ❌")
     }
   };
 
