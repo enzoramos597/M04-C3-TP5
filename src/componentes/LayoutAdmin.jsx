@@ -8,22 +8,24 @@ const LayoutAdmin = () => {
   const [openFavModal, setOpenFavModal] = useState(false);
 
   return (
-    <>
-      {/* PASAMOS LA FUNCIÓN como prop */}
+    <div className="w-full min-h-screen flex flex-col bg-black/60"> 
+      {/* HEADER FULL WIDTH */}
       <HeaderAdmin onOpenFavoritos={() => setOpenFavModal(true)} />
 
-      <main>
+      {/* MAIN FULL WIDTH */}
+      <main className="flex-1 w-full">
         <Outlet />
       </main>
 
+      {/* FOOTER FULL WIDTH */}
       <Footer />
 
-      {/* Modal en el layout para que esté por encima del Outlet */}
+      {/* Modal */}
       <FavoritosModal
         isOpen={openFavModal}
         onClose={() => setOpenFavModal(false)}
       />
-    </>
+    </div>
   );
 };
 

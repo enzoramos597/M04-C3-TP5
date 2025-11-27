@@ -6,10 +6,10 @@ import gestionusuarios from "../../assets/gestiondeusuarios.png"
 
 export default function DashboardAdmin() {
   return (
-    <div className="min-h-screen bg-black/60 text-white p-8">
+    <div className="min-h-[82vh] bg-black/80 text-white p-8">
       {/* HEADER ESTILO NETFLIX */}
-      <header className="flex justify-between items-center mb-10">
-        <h1 className="text-4xl font-bold tracking-wide text-red-600">PELIFLIX ADMIN</h1>
+      <header className="flex justify-between items-center mb-12">
+        <h1 className="text-4xl font-bold tracking-wide text-red-600 mt-10">PELIFLIX ADMIN</h1>
         
       </header>
 
@@ -17,9 +17,9 @@ export default function DashboardAdmin() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
 
         {/* CARD 1 */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900"
+        <div
+          
+          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900 hover:scale-105"
         >
           <Link to="/uploadmovie" className="w-full h-full block">
             <img
@@ -30,12 +30,12 @@ export default function DashboardAdmin() {
               <p className="text-2xl font-bold">Cargar Película</p>
             </div>
           </Link>
-        </motion.div>
+        </div>
 
         {/* CARD 2 */}
-        <motion.div
+        <div
           whileHover={{ scale: 1.05 }}
-          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900"
+          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900 hover:scale-105"
         >
           <Link to="peliculas" className="w-full h-full block">
             <img
@@ -46,12 +46,12 @@ export default function DashboardAdmin() {
               <p className="text-2xl font-bold">Ver Películas</p>
             </div>
           </Link>
-        </motion.div>
+        </div>
 
         {/* CARD 3 */}
-        <motion.div
+        <div
           whileHover={{ scale: 1.05 }}
-          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900"
+          className="relative h-60 rounded-2xl overflow-hidden cursor-pointer group bg-gray-900 hover:scale-105"
         >
           <Link to="/gestion-usuarios" className="w-full h-full block">
             <img
@@ -62,7 +62,7 @@ export default function DashboardAdmin() {
               <p className="text-2xl font-bold">Gestión de Usuarios</p>
             </div>
           </Link>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

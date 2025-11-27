@@ -67,6 +67,7 @@ const IniciarSesion = () => {
             placeholder="Contraseña"
             className="p-3 rounded bg-neutral-800 text-white border border-neutral-700"
           />
+          
           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
           <button
